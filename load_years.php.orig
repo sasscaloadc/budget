@@ -1,0 +1,25 @@
+<?php
+require_once("load.php");
+
+class load_years extends load
+{
+        public function get_sql() {
+                $taskid = array_key_exists("taskid",$_GET) ?  $_GET["taskid"] : "";
+                if (empty($taskid)) {
+                        $taskid = array_key_exists("taskid",$_POST) ?  $_POST["taskid"] : "";
+                }
+
+                $sql = "Select year from budget where task_id = ".(empty($taskid)?0:$taskid)." group by year order by year";
+		return $sql;
+        }
+
+        public function process_row($row) {
+                return "<option value=\"".$row["year"]."\">".$row["year"]."</option>";
+        }
+
+}
+
+	$ly = new load_years();
+
+	echo $ly->query();
+?>
