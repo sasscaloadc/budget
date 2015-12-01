@@ -42,6 +42,14 @@ require_once("db.php");
         if (empty($transport)) {
                 $transport = array_key_exists("transport",$_POST) ?  $_POST["transport"] : "";
         }
+        $prev_unused = array_key_exists("prev_unused",$_GET) ?  $_GET["prev_unused"] : "";
+        if (empty($prev_unused)) {
+                $prev_unused = array_key_exists("prev_unused",$_POST) ?  $_POST["prev_unused"] : "";
+        }
+        $prev_xrate = array_key_exists("prev_xrate",$_GET) ?  $_GET["prev_xrate"] : "";
+        if (empty($prev_xrate)) {
+                $prev_xrate = array_key_exists("prev_xrate",$_POST) ?  $_POST["prev_xrate"] : "";
+        }
 
 	$sql = " UPDATE budget SET investments_actual = ".(empty($investments) ? "0" : $investments).
                                   ", personnel_actual = ".(empty($personnel) ? "0" : $personnel).
@@ -50,7 +58,14 @@ require_once("db.php");
                                   ", transport_actual = ".(empty($transport) ? "0" : $transport).
 	       (empty($status) ? "" : ", status = ".$status) .
                " WHERE task_id = ".$taskid." AND year = ".$year." AND quarter = ".$quarter;
+	if ($status == 3) {
+		$next_quarter = $quarter >= 4 ? 1 : $quarter + 1;
+		$next_year = $quarter >= 4 ? $year + 1 : $year;
+		$sql .= "; INSERT INTO budget (task_id, year, quarter, prev_unused, prev_xrate, status) ".
+                        "    VALUES (".$taskid.", ".$next_year.", ".$next_quarter.", ".$prev_unused.", ".$prev_xrate.", 1)";
+	}
 
+//error_log($sql);
 	$conn = getConnection();
 
 	$result = pg_query($conn, $sql);

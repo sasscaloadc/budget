@@ -73,9 +73,6 @@ class load_figures extends load
 					"<tr><td></td><td></td><td> <input type=\"button\" value=\"Submit\" id=\"submit_2\"><span id=\"submit_message\"></span></td></tr>";
 				break;
 			case 3 :
-error_log("investments_actual: ".$row["investments_actual"]);
-error_log("livexrate: ".$row["livexrate"]);
-error_log("euro: ".$row["investments_actual"]/$row["livexrate"]);
                                 $html = "<tr><th>Expense</th><th>Requested ".$row["currency"]."</th><th>Spent ".$row["currency"]."</th><th>Spent Euro</th></tr>".
                                         "<tr><td>Investments: </td>".
                                             "<td><span id=\"investments_requested\">".$row["investments"]."</span> </td>".
@@ -107,7 +104,32 @@ error_log("euro: ".$row["investments_actual"]/$row["livexrate"]);
                                             "<td> <input type=\"button\" value=\"Submit\" id=\"submit_3\"><span id=\"submit_message\"></span></td></tr>";
 				break;
 			case 4 :
-				$html = "<h3>Status ".$status."</h3>";
+                                $html = "<tr><th>Expense</th><th>Requested ".$row["currency"]."</th><th>Spent ".$row["currency"]."</th><th>Spent Euro</th></tr>".
+                                        "<tr><td>Investments: </td>".
+                                            "<td><span id=\"investments_requested\">".$row["investments"]."</span> </td>".
+                                            "<td><span id=\"investments_local\">".$row["investments_actual"]."</span></td>".
+					    "<td><span id=\"investments_euro\">".$row["investments_actual"]/$row["livexrate"]."</span> </td>".
+                                        "<tr><td>Services: </td>".
+                                            "<td><span id=\"services_requested\">".$row["services"]."</span> </td>".
+                                            "<td><span id=\"services_local\">".$row["services_actual"]."</span></td>".
+					    "<td><span id=\"services_euro\">".$row["services_actual"]/$row["livexrate"]."</span> </td>".
+                                        "<tr><td>Transport: </td>".
+                                            "<td><span id=\"transport_requested\">".$row["transport"]."</span> </td>".
+                                            "<td><span id=\"transport_local\">".$row["transport_actual"]."</span></td>".
+					    "<td><span id=\"transport_euro\">".$row["transport_actual"]/$row["livexrate"]."</span> </td>".
+                                        "<tr><td>Personnel: </td>".
+                                            "<td><span id=\"personnel_requested\">".$row["personnel"]."</span> </td>".
+                                            "<td><span id=\"personnel_local\">".$row["personnel_actual"]."</span></td>".
+					    "<td><span id=\"personnel_euro\">".$row["personnel_actual"]/$row["livexrate"]."</span> </td>".
+                                        "<tr><td>Consumables: </td>".
+                                            "<td><span id=\"consumables_requested\">".$row["consumables"]."</span> </td>".
+                                            "<td><span id=\"consumables_local\">".$row["consumables_actual"]."</span></td>".
+					    "<td><span id=\"consumables_euro\">".$row["consumables_actual"]/$row["livexrate"]."</span> </td>".
+                                        "<tr style=\"font-weight:bold;\"><td class=\"topline\"> Total: </td>".
+                                            "<td class=\"topline\"> <span id=\"total_requested\">".$total."</span></td>".
+                                            "<td class=\"topline\"> <span id=\"total_local\">".$total_actual."</span></td>".
+					    "<td class=\"topline\"> <span id=\"total_euro\">".$total_actual/$row["livexrate"]."</span></td></tr>".
+                                        "<tr><td>&nbsp</td><td>&nbsp</td><td> Unused: </td><td><span id=\"total_unused\">".($total-$total_actual)/$row["livexrate"]."</span></td></tr>";
 				break;
 			default:
 				$html = "<h3>Status ".$status."</h3>";
