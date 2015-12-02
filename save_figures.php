@@ -42,12 +42,17 @@ require_once("db.php");
         if (empty($transport)) {
                 $transport = array_key_exists("transport",$_POST) ?  $_POST["transport"] : "";
         }
+        $admin = array_key_exists("admin",$_GET) ?  $_GET["admin"] : "";
+        if (empty($admin)) {
+                $admin = array_key_exists("admin",$_POST) ?  $_POST["admin"] : "";
+        }
 
 	$sql = " UPDATE budget SET investments = ".(empty($investments) ? "0" : $investments).
                                   ", personnel = ".(empty($personnel) ? "0" : $personnel).
                                    ", services = ".(empty($services) ? "0" : $services).
                                 ", consumables = ".(empty($consumables) ? "0" : $consumables).
                                   ", transport = ".(empty($transport) ? "0" : $transport).
+                                  ", admin = ".(empty($admin) ? "0" : $admin).
 	       (empty($status) ? "" : ", status = ".$status) .
                " WHERE task_id = ".$taskid." AND year = ".$year." AND quarter = ".$quarter;
 

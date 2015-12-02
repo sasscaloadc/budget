@@ -50,12 +50,17 @@ require_once("db.php");
         if (empty($prev_xrate)) {
                 $prev_xrate = array_key_exists("prev_xrate",$_POST) ?  $_POST["prev_xrate"] : "";
         }
+        $admin = array_key_exists("admin",$_GET) ?  $_GET["admin"] : "";
+        if (empty($admin)) {
+                $admin = array_key_exists("admin",$_POST) ?  $_POST["admin"] : "";
+        }
 
 	$sql = " UPDATE budget SET investments_actual = ".(empty($investments) ? "0" : $investments).
                                   ", personnel_actual = ".(empty($personnel) ? "0" : $personnel).
                                    ", services_actual = ".(empty($services) ? "0" : $services).
                                 ", consumables_actual = ".(empty($consumables) ? "0" : $consumables).
                                   ", transport_actual = ".(empty($transport) ? "0" : $transport).
+                                  ", admin = ".(empty($admin) ? "0" : $admin).
 	       (empty($status) ? "" : ", status = ".$status) .
                " WHERE task_id = ".$taskid." AND year = ".$year." AND quarter = ".$quarter;
 	if ($status == 3) {

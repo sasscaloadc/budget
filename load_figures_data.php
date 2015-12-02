@@ -23,10 +23,6 @@ class load_figures_data extends load
                 return " SELECT b.*, c.value as livexrate, t.currency ". //, d.xrate as prevxrate, d.received as prevreceived ".
 		       " FROM budget b INNER JOIN task t on t.id = task_id ".
 		       "               INNER JOIN currencies c on t.currency = c.code ".
-     		       //"               LEFT OUTER JOIN budget d on ".
-		       //"              (d.task_id = b.task_id ".
-		       //"           AND d.year = CASE b.quarter WHEN 1 THEN b.year - 1 ELSE b.year END ". 
-		       //"           AND  d.quarter = CASE b.quarter WHEN 1 THEN 4 ELSE b.quarter - 1 END ) ".
                        " WHERE b.task_id = ".$taskid." AND b.year = ".$year." AND b.quarter = ".$quarter;
         }
 
@@ -44,6 +40,7 @@ class load_figures_data extends load
 		$output["transport_actual"] = $row["transport_actual"];
 		$output["personnel_actual"] = $row["personnel_actual"];
 		$output["consumables_actual"] = $row["consumables_actual"];
+		$output["admin"] = $row["admin"];
 		$output["prev_xrate"] = $row["prev_xrate"];
 		$output["prev_unused"] = $row["prev_unused"];
 		$output["xrate_requested"] = $row["xrate_requested"];

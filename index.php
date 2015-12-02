@@ -10,6 +10,8 @@
 
 	var task;
 	var wxr = 1;
+	var budgetyears;
+	var budgetquarters;
 
 	function money(n) {
         	var decPlaces = 2,
@@ -57,17 +59,36 @@
 	}
 
         function update_totals() {
-//alert("STOP!!");
-//alert(val($("#investments_requested")));
-		vset($("#total_requested"), roundToTwo(val($("#investments_requested")) + val($("#personnel_requested")) + val($("#services_requested")) + val($("#transport_requested")) + val($("#consumables_requested"))));
-//alert("after");
-		vset($("#total_local"), roundToTwo(val($("#investments_local")) + val($("#personnel_local")) + val($("#services_local")) + val($("#transport_local")) + val($("#consumables_local"))));
-		vset($("#total_euro"), roundToTwo(val($("#investments_euro")) + val($("#personnel_euro")) + val($("#services_euro")) + val($("#transport_euro")) + val($("#consumables_euro"))));
-		vset($("#total_actual"), roundToTwo(val($("#investments_actual")) + val($("#personnel_actual")) + val($("#services_actual")) + val($("#transport_actual")) + val($("#consumables_actual"))));
+		vset($("#total_requested"), roundToTwo(val($("#investments_requested")) 
+						+ val($("#personnel_requested")) 
+						+ val($("#services_requested")) 
+						+ val($("#transport_requested")) 
+						+ val($("#consumables_requested"))));
+		vset($("#total_local"), roundToTwo(val($("#investments_local")) 
+						+ val($("#personnel_local")) 
+						+ val($("#services_local")) 
+						+ val($("#transport_local")) 
+						+ val($("#consumables_local")) 
+						+ val($("#admin_local")) ));
+		vset($("#total_euro"), roundToTwo(val($("#investments_euro")) 
+						+ val($("#personnel_euro")) 
+						+ val($("#services_euro")) 
+						+ val($("#transport_euro")) 
+						+ val($("#consumables_euro")) 
+						+ val($("#admin_euro")) ));
+		vset($("#total_actual"), roundToTwo(val($("#investments_actual")) 
+						+ val($("#personnel_actual")) 
+						+ val($("#services_actual")) 
+						+ val($("#transport_actual")) 
+						+ val($("#consumables_actual"))));
+		vset($("#total_available"), roundToTwo(val($("#investments_available")) 
+						+ val($("#personnel_available")) 
+						+ val($("#services_available")) 
+						+ val($("#transport_available")) 
+						+ val($("#consumables_available")) 
+						- val($("#admin_euro")) ));
 		vset($("#unused_local"), roundToTwo(val($("#funds_available")) - val($("#total_local"))));
-		//vset($("#unused_euro"), roundToTwo((val($("#funds_available")) - val($("#total_local"))) / (val($("#weighted_rate")) == 0 ? 1 : val($("#weighted_rate")) )   ));
 		vset($("#unused_euro"), roundToTwo((val($("#funds_available")) - val($("#total_local"))) / wxr   ));
-		vset($("#total_available"), roundToTwo(val($("#investments_available")) + val($("#personnel_available")) + val($("#services_available")) + val($("#transport_available")) + val($("#consumables_available"))));
 	}
 		
 	function update_value(item) {
@@ -95,7 +116,19 @@
 		return wxr == 0 ? 1 : wxr;
 	}
 
+	function setNavigationButtons() {
+		$("#previous").prop("disabled", true);
+		$("#next").prop("disabled", true);
+		if (($("#quarters").prop("selectedIndex") > 0) || ($("#years").prop("selectedIndex") > 0)) {
+			$("#previous").prop("disabled", false);
+		}
+		if (($("#quarters").prop("selectedIndex") < $("#quarters").prop("length") - 1) || ($("#years").prop("selectedIndex") < $("#years").prop("length") - 1)) {
+			$("#next").prop("disabled", false);
+		}
+	}
+
 	function load_figures() {
+		setNavigationButtons();
 		$("#figures").show();
 		$("#receive").hide(); 
 		$("#save_1").prop("disabled",false); 
@@ -117,6 +150,7 @@
 					$("[id*='weighted']").hide();
 					$("#stat1_save").show();
 					$("#stat2_save").hide();
+					$(".stage2").hide();
 					$("#heading_local").html("Estimates "+budget.currency);
 					$("#heading_euro").html("Estimates Euro");
 
@@ -130,6 +164,7 @@
 					$("#transport_euro").html("<input type=\"text\" id=\"transport_euro_input\" value=\""+roundToTwo(budget.transport/ budget.livexrate)+"\" onchange=\"update_value($(this))\"/>");
 					$("#personnel_local").html("<input type=\"text\" id=\"personnel_local_input\" value=\""+budget.personnel+"\" onchange=\"update_value($(this))\"/>");
 					$("#personnel_euro").html("<input type=\"text\" id=\"personnel_euro_input\" value=\""+roundToTwo(budget.personnel/ budget.livexrate)+"\" onchange=\"update_value($(this))\"/>");
+					$("#admin_local").html("");
 					wxr = calc_weighted_rate(budget);
 					update_totals();
 					break;
@@ -140,6 +175,7 @@
 					$("[id*='surplus']").show();
 					$("[id*='funds']").show();
 					$("[id*='weighted']").show();
+					$(".stage2").show();
 					$("#stat1_save").hide();
 					$("#stat2_save").show();
 
@@ -157,6 +193,7 @@
 					$("#consumables_local").html("<input type=\"text\" id=\"consumables_local_input\" value=\""+budget.consumables_actual+"\" onchange=\"update_value($(this))\"/>");
 					$("#transport_local").html("<input type=\"text\" id=\"transport_local_input\" value=\""+budget.transport_actual+"\" onchange=\"update_value($(this))\"/>");
 					$("#personnel_local").html("<input type=\"text\" id=\"personnel_local_input\" value=\""+budget.personnel_actual+"\" onchange=\"update_value($(this))\"/>");
+					$("#admin_local").html("<input type=\"text\" id=\"admin_local_input\" value=\""+budget.admin+"\" onchange=\"update_value($(this))\"/>");
 					if (budget.received_date == null) {
 						$("#funds_received_local").html("0");
 						$("#funds_received_rate").html("0");
@@ -165,7 +202,7 @@
 								load_receive();
 							});
 					} else {
-						$("#funds_received_local").html(budget.received);
+						$("#funds_received_local").html(money(budget.received));
                                                 $("#funds_received_rate").html(budget.xrate);
                                                 $("#funds_received_euro").html(roundToTwo(eval(budget.received) / eval(budget.xrate)));
 					}
@@ -175,6 +212,7 @@
 					$("#consumables_euro").html(roundToTwo(budget.consumables_actual / wxr ));
 					$("#transport_euro").html(roundToTwo(budget.transport_actual / wxr ));
 					$("#personnel_euro").html(roundToTwo(budget.personnel_actual / wxr ));
+					$("#admin_euro").html(roundToTwo(budget.admin / wxr ));
 					update_totals();
 					break;
 				   case "3":
@@ -184,6 +222,7 @@
 					$("[id*='surplus']").show();
 					$("[id*='funds']").show();
 					$("[id*='weighted']").show();
+					$(".stage2").show();
 					$("#stat1_save").hide();
 					$("#stat2_save").hide();
 
@@ -202,6 +241,7 @@
 					$("#consumables_local").html(money(budget.consumables_actual));
 					$("#transport_local").html(money(budget.transport_actual));
 					$("#personnel_local").html(money(budget.personnel_actual));
+					$("#admin_local").html(money(budget.admin));
 
 					$("#funds_received_local").html(money(budget.received));
                                         $("#funds_received_rate").html(budget.xrate);
@@ -213,7 +253,7 @@
 					$("#consumables_euro").html(roundToTwo(budget.consumables_actual / wxr ));
 					$("#transport_euro").html(roundToTwo(budget.transport_actual / wxr ));
 					$("#personnel_euro").html(roundToTwo(budget.personnel_actual / wxr ));
-
+					$("#admin_euro").html(roundToTwo(budget.admin / wxr ));
 
 					break;
 				   default:
@@ -298,6 +338,7 @@
     				services: val($("#services_local")),
     				transport: val($("#transport_local")),
     				consumables: val($("#consumables_local")),
+    				admin: val($("#admin_local")),
 				prev_unused: val($("#unused_local")),
 				prev_xrate: wxr,
 				taskid: $("#tasks").val(),
@@ -345,6 +386,38 @@
                         });
 	}
 
+	function go(direction) {
+		
+		if (direction == "next") {
+			if ($("#quarters").prop("selectedIndex") < $("#quarters").prop("length") - 1) {
+					$("#quarters").prop("selectedIndex", $("#quarters").prop("selectedIndex") + 1);
+					load_figures();
+				} else {
+					$("#years").prop("selectedIndex", $("#years").prop("selectedIndex") + 1);
+					load_quarters();
+				}
+		} else {
+			if ($("#quarters").prop("selectedIndex") == 0){
+					$("#years").prop("selectedIndex", $("#years").prop("selectedIndex") - 1);
+					load_quarters();
+				} else {
+					$("#quarters").prop("selectedIndex", $("#quarters").prop("selectedIndex") - 1);
+					load_figures();
+				}
+		}
+		//if (direction == "next") {
+			//goquarter = $("#quarters").val() < 4 ? eval($("#quarters").val()) + 1 : 1;
+			//goyear =    $("#quarters").val() < 4 ? $("#years").val()        : eval($("#years").val()) + 1;
+		//} else {
+			//goquarter = $("#quarters").val() > 1 ? eval($("#quarters").val()) - 1 : 4;
+			//goyear =    $("#quarters").val() > 1 ? $("#years").val()        : eval($("#years").val()) - 1;
+		//}
+	//alert("going "+ goyear + " " + goquarter);	
+		//$("#years").val(goyear);
+		//$("#quarters").val(goquarter);
+		//load_figures();
+	};
+
 	$(document).ready(function(){
 		$("#tasks").load("load_tasklist.php?database=budget", function(){
 			load_task();
@@ -374,6 +447,8 @@
 		$("#submit_1").click(function() { save_values(2, false, "figures"); });
 		$("#save_2").click(function() { save_values(2, true, "actual"); });
 		$("#submit_2").click(function() { save_values(3, false, "actual"); });
+		$("#previous").click(function() { go("previous"); });
+		$("#next").click(function() { go("next"); });
 	}); 
     </script> 
     <style  type="text/css">
@@ -480,6 +555,12 @@ td.wrate {
     </table>
     <span id="figures">
     <table>
+          <tr><td><input type="button" value="<= Prev" id="previous" /></td>
+             <td>&nbsp;</td>
+             <td>&nbsp;</td>
+             <td>&nbsp;</td>
+             <td><input type="button" value="Next =>" id="next" /></td>
+	  </tr>
           <tr>
               <th>Expense</th>
               <th><span id="heading_requested"></span></th>
@@ -488,37 +569,43 @@ td.wrate {
               <th><span id="heading_available"></span></th>
 	  </tr>
           <tr><td>Investments: </td>
-             <td><span class="curr"></span><span id="investments_requested"></span> </td>
+             <td><span class="stage2"><span class="curr"></span></span><span id="investments_requested"></span> </td>
              <td><span class="curr"></span><span id="investments_local"></span></td>
              <td><span class="eur"></span><span id="investments_euro"></span> </td>
              <td><span class="eur"></span><span id="investments_available"></span> </td>
 	  </tr>
           <tr><td>Services: </td>
-             <td><span class="curr"></span><span id="services_requested"></span> </td>
+             <td><span class="stage2"><span class="curr"></span></span><span id="services_requested"></span> </td>
              <td><span class="curr"></span><span id="services_local"></span></td>
              <td><span class="eur"></span><span id="services_euro"></span> </td>
              <td><span class="eur"></span><span id="services_available"></span> </td>
 	  </tr>
           <tr><td>Transport: </td>
-             <td><span class="curr"></span><span id="transport_requested"></span> </td>
+             <td><span class="stage2"><span class="curr"></span></span><span id="transport_requested"></span> </td>
              <td><span class="curr"></span><span id="transport_local"></span></td>
              <td><span class="eur"></span><span id="transport_euro"></span> </td>
              <td><span class="eur"></span><span id="transport_available"></span> </td>
 	  </tr>
           <tr><td>Personnel: </td>
-             <td><span class="curr"></span><span id="personnel_requested"></span> </td>
+             <td><span class="stage2"><span class="curr"></span></span><span id="personnel_requested"></span> </td>
              <td><span class="curr"></span><span id="personnel_local"></span></td>
              <td><span class="eur"></span><span id="personnel_euro"></span> </td>
              <td><span class="eur"></span><span id="personnel_available"></span> </td>
 	  </tr>
           <tr><td>Consumables: </td>
-             <td><span class="curr"></span><span id="consumables_requested"></span> </td>
+             <td><span class="stage2"><span class="curr"></span></span><span id="consumables_requested"></span> </td>
              <td><span class="curr"></span><span id="consumables_local"></span></td>
              <td><span class="eur"></span><span id="consumables_euro"></span> </td>
              <td><span class="eur"></span><span id="consumables_available"></span> </td>
 	  </tr>
+          <tr class="stage2"><td>Admin & Other: </td>
+             <td>&nbsp;</td>
+             <td><span class="curr"></span><span id="admin_local"></span></td>
+             <td><span class="eur"></span><span id="admin_euro"></span> </td>
+             <td>&nbsp;</td>
+	  </tr>
           <tr style="font-weight:bold;"><td class="topline"> Total: </td>
-             <td class="topline"><span class="curr"></span><span id="total_requested"></span></td>
+             <td class="topline"><span class="stage2"><span class="curr"></span></span><span id="total_requested"></span></td>
              <td class="topline"><span class="curr"></span><span id="total_local"></span></td>
              <td class="topline"> <span class="eur"></span><span id="total_euro"></span></td>
              <td class="topline"> <span class="eur"></span><span id="total_available"></span></td>
@@ -537,13 +624,13 @@ td.wrate {
 		  <span id="submit_message"></span>
               </td>
           </tr>
-          <tr><td>&nbsp;</td>
+          <tr class="stage2"><td>&nbsp;</td>
               <td>&nbsp;</td>
               <td class="unused"><span id="heading_unused_local">Unused </span></td>
               <td class="unused"><span id="heading_unused_euro">Unused </span></td>
               <td>&nbsp;</td>
           </tr>
-          <tr><td>&nbsp;</td>
+          <tr class="stage2"><td>&nbsp;</td>
               <td>&nbsp;</td>
               <td class="unused"><span class="curr"></span><span id="unused_local"> </span></td>
               <td class="unused"><span class="eur"></span><span id="unused_euro"> </span></td>
@@ -557,17 +644,17 @@ td.wrate {
               <td class="funds"><span id="surplus_rate"> </span></td>
               <td class="funds"><span class="eur"></span><span id="surplus_euro"> </span></td>
           </tr>
-          <tr><td class="funds"><span id="funds_received_label">Funds Received for This Quarter</span></td>
+          <tr class="stage2"><td class="funds"><span id="funds_received_label">Funds Received for This Quarter</span></td>
               <td class="funds"><span class="curr"></span><span id="funds_received_local"> </span></td>
               <td class="funds"><span id="funds_received_rate"> </span></td>
               <td class="funds"><span class="eur"></span><span id="funds_received_euro"> </span></td>
           </tr>
-          <tr><td class="funds"><span id="funds_available_label">Funds Available</span></td>
+          <tr class="stage2"><td class="funds"><span id="funds_available_label">Funds Available</span></td>
               <td class="funds"><span class="curr"></span><span id="funds_available"> </span></td>
               <td>&nbsp;</td>
               <td>&nbsp;</td>
           </tr>
-          <tr><td class="wrate"><span id="weighted_label">Weighted Exchange Rate</span></td>
+          <tr class="stage2"><td class="wrate"><span id="weighted_label">Weighted Exchange Rate</span></td>
               <td>&nbsp;</td>
               <td class="wrate"><span id="weighted_rate"> </span></td>
               <td class="wrate"><span class="eur"></span><span id="weighted_euro"> </span></td>
@@ -576,10 +663,14 @@ td.wrate {
     </span>
     <span id="receive">
     <table>
-       <tr><td></td><td> Received (Local Currency: <span id="local_received"></span>)</td><td> <input id="received_local" type="text"></td></tr>
+       <tr><td></td><td> Received (Local Currency: <span id="local_received"></span>)</td><td> 
+				<input id="received_local" type="text"></td></tr>
        <tr><td></td><td> Date Received </td><td> <input id="received_date" type="text"></td></tr>
        <tr><td></td><td> Exchange Rate </td><td> <input id="received_xrate" type="text"></td></tr>
-       <tr><td></td><td></td><td> <input type="button" value="Submit" id="submit_rec"><input type="button" value="Cancel" id="cancel"><span id="submit_rec_message"></span></td></tr>
+       <tr><td></td><td></td><td> <input type="button" value="Submit" id="submit_rec">
+				<input type="button" value="Cancel" id="cancel">
+				<span id="submit_rec_message"></span>
+	   </td></tr>
     </table>
     </span>
   </body>
