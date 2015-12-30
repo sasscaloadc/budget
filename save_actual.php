@@ -1,4 +1,5 @@
 <?php
+include 'check_access.php';
 require_once("db.php");
 
 

@@ -1,58 +1,67 @@
 <?php
-/*
- *  
- */
- 
-	$servername = "caprivi.sasscal.org";
-	$username = "postgres";
-	$password = "5455c4l_";
-	$dbname = "budget";
-
-
-        function getConnection() {
-                // Create connection
-                $conn = pg_pconnect("host=".$servername." dbname=".$dbname." user=".$username." password=".$password);
-                if (!$conn) {
-                        die("Database connection failed. ");
-                }
-                return $conn;
-        }
-
-
-	function get_columns() {
-		$conn = getConnection();
-
-		$database = array_key_exists("database",$_GET) ?  $_GET["database"] : "";
-		if (empty($database)) {
-			$database = array_key_exists("database",$_POST) ?  $_POST["database"] : "";
-		}
-		if (empty($database)) {
-		        print "<h1>No parameter \"database\" received.</h1>";
-		        exit();
-		}
-
-		$table = array_key_exists("table",$_GET) ?  $_GET["table"] : "";
-		if (empty($table)) {
-			$table = array_key_exists("table",$_POST) ?  $_POST["table"] : "";
-		}
-		if (empty($table)) {
-		        print "<h1>No parameter \"table\" received.</h1>";
-		        exit();
-		}
-
-		$sql = "SELECT column_name, data_type FROM information_schema.columns WHERE table_name   = '".$table."' AND table_catalog = '".$database."' ";
-
-		$output = "";
-		$result = pg_query($conn, $sql);
-		if ($result && (pg_num_rows($result) > 0)) {
-			while($row = pg_fetch_array($result)) {
-				$output .= $row["column_name"]."<br/>";
-			}
-		}
-		pg_close($conn);
-		return $output;
-	}
-
-	echo get_columns();
+        include 'check_access.php';
 ?>
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta  content="text/html; charset=UTF-8"  http-equiv="content-type">
+    <title>Insert Table Row</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
+    <script>
+
+	function load_columns() {
+		$("#in_table").load("load_columns.php?database="+$("#databases").val().trim()+"&table="+$("#tables").val().trim());
+	};
+
+        $(document).ready(function(){
+                $("#databases").load("load_databases.php?database=postgres", function(responseTxt, statusTxt, xhr){
+				$("#tables").load("load_tables.php?database="+$("#databases").val());
+                    });
+        	$("#databases").change(function() {
+				$("#tables").load("load_tables.php?database="+$("#databases").val());
+				});
+        	$("#tables").change(load_columns());
+		$("#search").click(function() { load_columns(); });
+        });
+    </script>
+  </head>
+  <body>
+    <p  style="text-align: center;"><span  style="font-family: Helvetica,Arial,sans-serif; font-size: 30px;">
+	Insert Table Row</span></p>
+
+    <p>
+    <table  border="0">
+      <tbody id="select_table">
+        <tr>
+	  <td>
+    		<select id="databases">
+      		   <option  value="0">Loading...</option>
+		</select>
+	  </td>
+	</tr>
+        <tr>
+	  <td>
+    		<select  id="tables">
+      		   <option  value="0">Loading...</option>
+		</select>
+	  </td>
+	</tr>
+    </table>
+    </p>
+    <p>
+    <table  border="0">
+      <tbody id="in_table">
+        <tr>
+          <td  style="text-align: right;"></td>
+    <input type="button" id="search" value="Search"/>
+          </td>
+        </tr>
+      </tbody>
+    </table>
+    </p>
+  </body>
+</html>
+
+
+
 

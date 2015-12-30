@@ -1,4 +1,5 @@
 <?php
+include 'check_access.php';
 require_once("db.php");
 
 
@@ -26,6 +27,18 @@ require_once("db.php");
         if (empty($owner)) {
                 $owner = array_key_exists("owner",$_POST) ?  $_POST["owner"] : "";
         }
+        $institution = array_key_exists("institution",$_GET) ?  $_GET["institution"] : "";
+        if (empty($institution)) {
+                $institution = array_key_exists("institution",$_POST) ?  $_POST["institution"] : "";
+        }
+        $country = array_key_exists("country",$_GET) ?  $_GET["country"] : "";
+        if (empty($country)) {
+                $country = array_key_exists("country",$_POST) ?  $_POST["country"] : "";
+        }
+        $thematic_area = array_key_exists("thematic_area",$_GET) ?  $_GET["thematic_area"] : "";
+        if (empty($thematic_area)) {
+                $thematic_area = array_key_exists("thematic_area",$_POST) ?  $_POST["thematic_area"] : "";
+        }
         $currency = array_key_exists("currency",$_GET) ?  $_GET["currency"] : "";
         if (empty($currency)) {
                 $currency = array_key_exists("currency",$_POST) ?  $_POST["currency"] : "";
@@ -50,7 +63,7 @@ require_once("db.php");
         if (empty($personnel_budget)) {
                 $personnel_budget = array_key_exists("personnel_budget",$_POST) ?  $_POST["personnel_budget"] : "";
         }
-	$sql = " INSERT INTO task (id, description, owner, currency, investments_budget, services_budget, consumables_budget, transport_budget, personnel_budget) VALUES ($taskid, '".$description."', '".$owner. "', '".$currency."', ".$investments_budget.", ".$services_budget.", ".$consumables_budget.", ".$transport_budget.", ".$personnel_budget."); INSERT INTO budget (task_id, year, quarter, status) VALUES (".$taskid.", ".$firstyear.", ".$firstquarter.", 1)";
+	$sql = " INSERT INTO task (id, description, owner, institution, country, thematic_area, currency, investments_budget, services_budget, consumables_budget, transport_budget, personnel_budget) VALUES ($taskid, '".$description."', '".$owner. "', '".$institution. "', '".$country. "', '".$thematic_area. "', '".$currency."', ".$investments_budget.", ".$services_budget.", ".$consumables_budget.", ".$transport_budget.", ".$personnel_budget."); INSERT INTO budget (task_id, year, quarter, status) VALUES (".$taskid.", ".$firstyear.", ".$firstquarter.", 1)";
 
 	$conn = getConnection();
 

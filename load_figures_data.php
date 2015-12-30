@@ -20,10 +20,29 @@ class load_figures_data extends load
                         $quarter = array_key_exists("quarter",$_POST) ?  $_POST["quarter"] : "";
                 }
 		
-                return " SELECT b.*, c.value as livexrate, t.currency ". //, d.xrate as prevxrate, d.received as prevreceived ".
+                $sql = " SELECT b.*, c.value as livexrate, t.currency, d.* ". 
 		       " FROM budget b INNER JOIN task t on t.id = task_id ".
 		       "               INNER JOIN currencies c on t.currency = c.code ".
+                       " 	       LEFT OUTER JOIN (SELECT task_id, SUM(investments_actual / CASE WHEN (prev_unused = 0 AND received = 0) ".
+                       "                                 THEN 1 ELSE (prev_unused + received) / ((prev_unused / prev_xrate) + (received / xrate)) END) AS cum_investments_euro, ".
+                       "       		 SUM(services_actual / CASE WHEN (prev_unused = 0 AND received = 0) ".
+                       "                                THEN 1 ELSE (prev_unused + received) / ((prev_unused / prev_xrate) + (received / xrate)) END) AS cum_services_euro, ".
+                       "        	 SUM(consumables_actual / CASE WHEN (prev_unused = 0 AND received = 0) ".
+                       "                                THEN 1 ELSE (prev_unused + received) / ((prev_unused / prev_xrate) + (received / xrate)) END) AS cum_consumables_euro, ".
+                       "      		 SUM(personnel_actual / CASE WHEN (prev_unused = 0 AND received = 0) ".
+                       "                                THEN 1 ELSE (prev_unused + received) / ((prev_unused / prev_xrate) + (received / xrate)) END) AS cum_personnel_euro, ".
+                       "                 SUM(transport_actual / CASE WHEN (prev_unused = 0 AND received = 0) ".
+                       "                                THEN 1 ELSE (prev_unused + received) / ((prev_unused / prev_xrate) + (received / xrate)) END) AS cum_transport_euro ".
+                       "                     FROM budget ".
+                       "                     WHERE status = 3 ".
+                       "                        AND ((year * 10) + quarter) <= ((".$year." * 10) + ".$quarter.") ".
+                       "                        AND task_id = ".$taskid.
+                       "                     GROUP BY task_id) d on d.task_id = t.id ".
+
                        " WHERE b.task_id = ".$taskid." AND b.year = ".$year." AND b.quarter = ".$quarter;
+
+//error_log($sql);
+		return $sql;
         }
 
         public function process_row($row) {
@@ -41,6 +60,11 @@ class load_figures_data extends load
 		$output["personnel_actual"] = $row["personnel_actual"];
 		$output["consumables_actual"] = $row["consumables_actual"];
 		$output["admin"] = $row["admin"];
+                $output["cum_investments_euro"] = $row["cum_investments_euro"];
+                $output["cum_services_euro"] = $row["cum_services_euro"];
+                $output["cum_consumables_euro"] = $row["cum_consumables_euro"];
+                $output["cum_personnel_euro"] = $row["cum_personnel_euro"];
+                $output["cum_transport_euro"] = $row["cum_transport_euro"];
 		$output["prev_xrate"] = $row["prev_xrate"];
 		$output["prev_unused"] = $row["prev_unused"];
 		$output["xrate_requested"] = $row["xrate_requested"];
