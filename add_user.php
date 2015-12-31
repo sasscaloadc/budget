@@ -1,3 +1,10 @@
+<?php
+include "check_access.php";
+
+if ($_SESSION['access'] > 1)  {
+        header("Location: http://caprivi.sasscal.org/budget/no_access.php");
+}
+?>
 <!DOCTYPE html>
 <html>
   <head>
@@ -12,6 +19,11 @@
                 });
 
 		$("#save").click(function() { 
+			if ($("#password").val() != $("#verify_password").val()) {
+				 $("#submit_message").html("<span style=\"color:red\">Passwords do not match!</span>");
+				setTimeout(function() {$("#submit_message").html("");}, 3000);
+				return;
+			}
                 	$.post("create_user.php",
                         {
 				database: "budget",
@@ -22,18 +34,35 @@
                                 level: $("#level").val(),
                         },
                         function(data, status){
+				var saved = false;
                                 if (data == "OK") {
                                                 $("#submit_message").html("Saved");
+					        saved = true;	
                                 } else {
                                         $("#submit_message").html("<span style=\"color:red\">"+data+"</span>");
                                 }
-                                setTimeout(function() {$("#submit_message").html("");}, 3000);
+                                setTimeout(function() {
+					$("#submit_message").html("");
+					if (saved) {
+						window.location.href = "http://caprivi.sasscal.org/budget/index.php";
+					}
+				}, 3000);
                         });
 
 		});
         });
     </script>
     <style  type="text/css">
+#container{
+position: absolute;
+        top: 50%;
+        left: 50%;
+        margin-right: -50%;
+        transform: translate(-50%, -50%);
+}
+body {
+    font-family: Arial, Helvetica, sans-serif;
+}
 #submit_message {
   padding-left: 10px;
   font-size: 12px;
@@ -43,7 +72,8 @@
   </style>
   </head>
   <body>
-    <p  style="text-align: center;"><span  style="font-family: Helvetica,Arial,sans-serif; font-size: 30px;">
+   <div id="container">
+    <p  style="text-align: center;"><span  style="font-size: 30px;">
 	Create New User</span></p>
 
     <p>
@@ -88,14 +118,15 @@
       <tbody id="in_table">
         <tr>
           <td  style="text-align: right;"></td>
-             <input type="button" id="save" value="Create"/>
              <input type="button" id="cancel" value="< Back"/>
+             <input type="button" id="save" value="Create"/>
 	     <span id="submit_message"></span>
           </td>
         </tr>
       </tbody>
     </table>
     </p>
+   </div>
   </body>
 </html>
 

@@ -50,8 +50,11 @@
     </script>
     <style  type="text/css">
       #container {
-        width: 500px;
-        margin: 0 auto;
+            position: absolute;
+            top: 30%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%);
       }
       #submit_message {
         padding-left: 10px;
@@ -59,11 +62,14 @@
         font-weight: bold;
         color: green;
       }
+      body {
+	font-family: Helvetica,Arial,sans-serif;
+      }
   </style>
   </head>
   <body>
    <div id="container">
-    <p  style="text-align: center;"><span  style="font-family: Helvetica,Arial,sans-serif; font-size: 30px;">
+    <p  style="text-align: center;"><span  style="font-size: 30px;">
 	Reports</span></p>
 
     <p>

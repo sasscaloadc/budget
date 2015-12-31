@@ -1,7 +1,6 @@
 <?php
 require_once("db.php");
 include 'check_access.php';
-	echo "Logged in as ".$_SESSION['firstname'];
 
         $taskid = array_key_exists("taskid",$_GET) ?  $_GET["taskid"] : "";
         if (empty($taskid)) {
@@ -54,7 +53,7 @@ include 'check_access.php';
 		 WHERE task_id = ".$taskid."
 		   AND year = ".$year."
 		   AND quarter = ".$quarter;
-error_log($sql);
+
 	$result = pg_query($conn, $sql);
 	if ($result && (pg_num_rows($result) > 0)) {
 		$row = pg_fetch_array($result);
@@ -125,6 +124,10 @@ table.task_table td {
 	border-style: solid;
 	border-color: #666666;
 	background-color: #ffffff;
+}
+#container {
+	width: 800px;
+	margin: 0 auto;
 }
     </style>
   </head>

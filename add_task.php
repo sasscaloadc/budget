@@ -1,5 +1,9 @@
 <?php
         include 'check_access.php';
+
+	if ($_SESSION['access'] > 1)  {
+        	header("Location: http://caprivi.sasscal.org/budget/no_access.php");
+	}
 ?>
 <!DOCTYPE html>
 <html>
@@ -8,55 +12,60 @@
     <title>Add Task</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>
-        $(document).ready(function(){
-		$("#country").change(function() {
-			switch($("#country").val()) {
-				case "Angola" :
-					$("#institutionlist").empty();
-					$("#institutionlist").append('<option value="FC-Universidade Agostinho Neto">');
-					$("#institutionlist").append('<option value="FCA-Universidade Jose Eduardo dos Santos">');
-					$("#institutionlist").append('<option value="CNIC-Centro Nacional de Investigaçao Cientifica (Ministerio de Ciencias e Tecnologia)">');
-					$("#institutionlist").append('<option value="ISCE-Huila">');
-					$("#institutionlist").append('<option value="ISPT-Huila">');
-					break;
-                                case "Botswana" :
-                                        $("#institutionlist").empty();
-					$("#institutionlist").append('<option value="University of Botswana-Department of Environmental Sciences">');
-					$("#institutionlist").append('<option value="Okavango Research Institute-University of Botswana">');
-					$("#institutionlist").append('<option value="Department of Meteorological Services">');
-					$("#institutionlist").append('<option value="Botswana College of Agriculture">');
-					break;
-                                case "Germany" :
-                                        $("#institutionlist").empty();
-					$("#institutionlist").append('<option value="University of Hamburg">');
-					$("#institutionlist").append('<option value="University of Jena">');
-					$("#institutionlist").append('<option value="University of Trier">');
-					$("#institutionlist").append('<option value="University of Bonn">');
-					break;
-                                case "Namibia" :
-                                        $("#institutionlist").empty();
-					$("#institutionlist").append('<option value="Namibia University of Science and Technology">');
-					$("#institutionlist").append('<option value="University of Namibia">');
-					$("#institutionlist").append('<option value="Namibia Ministry of Agriculture, Water and Forestry">');
-					break;
-                                case "South Africa" :
-                                        $("#institutionlist").empty();
-					$("#institutionlist").append('<option value="National Research Foundation">');
-					$("#institutionlist").append('<option value="Department of Science and Technology">');
-					$("#institutionlist").append('<option value="University of Stellenbosch">');
-					break;
-                                case "Zambia" :
-                                        $("#institutionlist").empty();
-					$("#institutionlist").append('<option value="University of Zambia">');
-					$("#institutionlist").append('<option value="Department of Forestry Zambia Meteorological Department">');
-					$("#institutionlist").append('<option value="Community Based Natural Resource Management">');
-					$("#institutionlist").append('<option value="National Resource Sensing Centre (Zambia)">');
-					$("#institutionlist").append('<option value="Zambia Wildlife Authority">');
-					$("#institutionlist").append('<option value="Mulungushi University">');
-					$("#institutionlist").append('<option value="Zambia Agriculture Research Institute">');
-					break;
 
-			}
+	function update_institutionlist() {
+	   switch($("#country").val()) {
+		case "Angola" :
+			$("#institutionlist").empty();
+			$("#institutionlist").append('<option value="FC-Universidade Agostinho Neto">');
+			$("#institutionlist").append('<option value="FCA-Universidade Jose Eduardo dos Santos">');
+			$("#institutionlist").append('<option value="CNIC-Centro Nacional de Investigaçao Cientifica (Ministerio de Ciencias e Tecnologia)">');
+			$("#institutionlist").append('<option value="ISCE-Huila">');
+			$("#institutionlist").append('<option value="ISPT-Huila">');
+			break;
+                case "Botswana" :
+                        $("#institutionlist").empty();
+			$("#institutionlist").append('<option value="University of Botswana-Department of Environmental Sciences">');
+			$("#institutionlist").append('<option value="Okavango Research Institute-University of Botswana">');
+			$("#institutionlist").append('<option value="Department of Meteorological Services">');
+			$("#institutionlist").append('<option value="Botswana College of Agriculture">');
+			break;
+                case "Germany" :
+                        $("#institutionlist").empty();
+			$("#institutionlist").append('<option value="University of Hamburg">');
+			$("#institutionlist").append('<option value="University of Jena">');
+			$("#institutionlist").append('<option value="University of Trier">');
+			$("#institutionlist").append('<option value="University of Bonn">');
+			break;
+                case "Namibia" :
+                        $("#institutionlist").empty();
+			$("#institutionlist").append('<option value="Namibia University of Science and Technology">');
+			$("#institutionlist").append('<option value="University of Namibia">');
+			$("#institutionlist").append('<option value="Namibia Ministry of Agriculture, Water and Forestry">');
+			break;
+                case "South Africa" :
+                        $("#institutionlist").empty();
+			$("#institutionlist").append('<option value="National Research Foundation">');
+			$("#institutionlist").append('<option value="Department of Science and Technology">');
+			$("#institutionlist").append('<option value="University of Stellenbosch">');
+			break;
+                case "Zambia" :
+                        $("#institutionlist").empty();
+			$("#institutionlist").append('<option value="University of Zambia">');
+			$("#institutionlist").append('<option value="Department of Forestry Zambia Meteorological Department">');
+			$("#institutionlist").append('<option value="Community Based Natural Resource Management">');
+			$("#institutionlist").append('<option value="National Resource Sensing Centre (Zambia)">');
+			$("#institutionlist").append('<option value="Zambia Wildlife Authority">');
+			$("#institutionlist").append('<option value="Mulungushi University">');
+			$("#institutionlist").append('<option value="Zambia Agriculture Research Institute">');
+			break;
+	   }
+	}
+
+        $(document).ready(function(){
+		update_institutionlist();
+		$("#country").change(function() {
+			update_institutionlist();
 		});
 
         	$("#owner").load("load_users.php?database=budget", function(){
@@ -105,10 +114,22 @@
   font-weight: bold;
   color: green;
 }
+        #container{
+            position: absolute;
+            top: 50%;
+            left: 50%;
+            margin-right: -50%;
+            transform: translate(-50%, -50%);
+        }
+        body {
+            font-family: Arial, Helvetica, sans-serif;
+        }
+
   </style>
   </head>
   <body>
-    <p  style="text-align: center;"><span  style="font-family: Helvetica,Arial,sans-serif; font-size: 30px;">
+   <div id="container">
+    <p  style="text-align: center;"><span  style="font-size: 30px;">
 	Create New Task</span></p>
 
     <p>
@@ -116,12 +137,12 @@
       <tbody id="task">
         <tr>
 	  <td> Task ID </td>
-	  <td> <input type="text" id="taskid"/>
+	  <td> <input type="text" id="taskid" size="5"/>
 	  </td>
 	</tr>
         <tr>
 	  <td> Description </td>
-	  <td> <input type="text" id="description"/>
+	  <td> <input type="text" id="description" size="100"/>
 	  </td>
 	</tr>
         <tr>
@@ -134,7 +155,7 @@
         <tr>
 	  <td> Institution </td>
 	  <td> 
-		<input list="institutionlist" id="institution">
+		<input list="institutionlist" id="institution" size="100">
 		<datalist id="institutionlist">
   		   <option value="Please Select Country">
 		   <!-- BOTSWANA --
@@ -259,14 +280,15 @@
       <tbody id="in_table">
         <tr>
           <td  style="text-align: right;"></td>
-             <input type="button" id="save" value="Create"/>
              <input type="button" id="cancel" value="< Back"/>
+             <input type="button" id="save" value="Create"/>
 	     <span id="submit_message"></span>
           </td>
         </tr>
       </tbody>
     </table>
     </p>
+   </div>
   </body>
 </html>
 

@@ -3,7 +3,7 @@
 	if ($_SESSION["access"] > 1) {
 		header("Location: http://caprivi.sasscal.org/budget/no_access.php");
 	} else {
-		echo "Logged in as ".$_SESSION['firstname'];
+	//	echo "Logged in as ".$_SESSION['firstname'];
 	}
 ?>
 <!DOCTYPE html>
@@ -35,12 +35,21 @@ table.task_table td {
 	background-color: #ffffff;
 }
 h3 {
-	font-family: verdana,arial,sans-serif;
 	font-size:16px;
 }
+body {
+    	font-family: Arial, Helvetica, sans-serif;
+}
+#container {
+	width: 800px;
+	margin: 0 auto;
+}
+
     </style>
   </head>
   <body>
+    <div id="container">
+      <h3> SASSCAL TASKS BUDGET REPORT </h3>
 <?php
 require_once("db.php");
 
@@ -134,5 +143,6 @@ require_once("db.php");
 	}
 	pg_close($conn);
 ?>
+     </div>
    </body>
 </html>

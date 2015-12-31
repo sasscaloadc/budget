@@ -205,9 +205,14 @@ function load_figures() {
 					$("#funds_received_local").html("0");
 					$("#funds_received_rate").html("0");
 					$("#funds_received_euro").html("<input id=\"record_receipt\" type=\"button\" value=\"Record Receipt\" />");
-					$("#record_receipt").click(function() {
-							load_receive();
-						});
+					<?php
+						if ($_SESSION["access"] > 1) {
+							echo " $(\"#record_receipt\").prop(\"disabled\",true); ";
+						} else {
+							echo " $(\"#record_receipt\").prop(\"disabled\",false); ";
+							echo " $(\"#record_receipt\").click(function() { load_receive(); });";
+						}
+					?>
 				} else {
 					$("#funds_received_local").html(money(budget.received));
 					$("#funds_received_rate").html(budget.xrate);
@@ -534,9 +539,9 @@ Tool</span></p>
    <!-- MENU --->
 	<table border=0>
 	  <tr>
-	    <td style="text-align: left">
+	    <td style="text-align: left; font-size:11px">
         <?php
-		echo "Hello ".$_SESSION['firstname']."  Access : ".$_SESSION['access'];
+		echo "Logged in as ".$_SESSION['firstname']." : ".($_SESSION['access'] > 1 ? "(PI)" : "(Admin)");
 	?>
 	    </td>
 	    <td style="text-align: right">

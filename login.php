@@ -11,6 +11,12 @@
             margin-right: -50%;
             transform: translate(-50%, -50%);
         }
+	#title {
+	    font-size: 30px;
+	}
+	body {
+	    font-family: Arial, Helvetica, sans-serif;
+	}
     </style>
   </head>
   <body>
@@ -19,11 +25,17 @@
     <table  border="0">
       <tbody id="select_table">
         <tr>
-	  <td>Username:</td>
+	  <td colspan="2" style="padding-top: 50px"><span id="title">Budget Monitoring Tool</span></td>
+	</tr>
+        <tr>
+	  <td colspan="2" style="padding: 20px" align="center"><img src="logo.png"></td>
+	</tr>
+        <tr>
+	  <td align="right">Username:</td>
 	  <td><input type="text" name="username" /></td>
 	</tr>
         <tr>
-	  <td>Password:</td>
+	  <td align="right">Password:</td>
 	  <td><input type="password" name="password" /></td>
 	</tr>
         <tr>

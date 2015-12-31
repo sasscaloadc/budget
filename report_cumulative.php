@@ -1,11 +1,6 @@
 <?php
 require_once("db.php");
 	include 'check_access.php';
-	if ($_SESSION["access"] > 1) {
-		header("Location: http://caprivi.sasscal.org/budget/no_access.php");
-	} else {
-		echo "Logged in as ".$_SESSION['firstname'];
-	}
 
         $taskid = array_key_exists("taskid",$_GET) ?  $_GET["taskid"] : "";
         if (empty($taskid)) {
@@ -104,6 +99,10 @@ table.task_table td {
 	border-style: solid;
 	border-color: #666666;
 	background-color: #ffffff;
+}
+#container {
+	width: 800px;
+	margin: 0 auto;
 }
     </style>
   </head>
