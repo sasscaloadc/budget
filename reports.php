@@ -8,10 +8,12 @@
     <title>Reports</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>
+var location_url = "<?php echo $location_url ?>";
+
         $(document).ready(function(){
 
                 $("#tasks").click(function() {
-                        window.location.href = "http://caprivi.sasscal.org/budget/report_tasks.php";
+                        window.location.href = location_url+"report_tasks.php";
                 });
 
         	$("#cumulative").load("load_tasklist.php?database=budget", function(){
@@ -35,15 +37,15 @@
                 });
 
                 $("#cumulative_go").click(function() {
-                        window.location.href = "http://caprivi.sasscal.org/budget/report_cumulative.php?taskid="+$("#cumulative").val().trim();
+                        window.location.href = location_url+"report_cumulative.php?taskid="+$("#cumulative").val().trim();
                 });
 
                 $("#quarterly_go").click(function() {
-                        window.location.href = "http://caprivi.sasscal.org/budget/report_quarterly.php?taskid="+$("#quarterly").val().trim()+"&year="+$("#year").val().trim()+"&quarter="+$("#quarter").val().trim();
+                        window.location.href = location_url+"report_quarterly.php?taskid="+$("#quarterly").val().trim()+"&year="+$("#year").val().trim()+"&quarter="+$("#quarter").val().trim();
                 });
 
                 $("#cancel").click(function() {
-                        window.location.href = "http://caprivi.sasscal.org/budget/index.php";
+                        window.location.href = location_url+"index.php";
                 });
 
         });

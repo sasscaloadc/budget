@@ -40,11 +40,13 @@ class load_figures_data extends load
                        "                 SUM(consumables_actual) AS cum_consumables, ".
                        "                 SUM(personnel_actual) AS cum_personnel, ".
                        "                 SUM(transport_actual) AS cum_transport, ".
-                       "                 SUM(admin) AS cum_admin ".
+                       "                 SUM(admin) AS cum_admin, ".
+                       "                 SUM(received) AS cum_received, ".
+                       "                 SUM(received / xrate) AS cum_received_euro ".
                        "                     FROM budget ".
-                       "                     WHERE status = 3 ".
-                       "                        AND ((year * 10) + quarter) <= ((".$year." * 10) + ".$quarter.") ".
+                       "                        WHERE ((year * 10) + quarter) <= ((".$year." * 10) + ".$quarter.") ".
                        "                        AND task_id = ".$taskid.
+                       //"                        AND status = 3 ".
                        "                     GROUP BY task_id) d on d.task_id = t.id ".
 
                        " WHERE b.task_id = ".$taskid." AND b.year = ".$year." AND b.quarter = ".$quarter;
@@ -62,11 +64,16 @@ class load_figures_data extends load
 		$output["transport"] = $row["transport"];
 		$output["personnel"] = $row["personnel"];
 		$output["consumables"] = $row["consumables"];
+		$output["personnel_planned"] = $row["personnel_planned"];
+		$output["investments_planned"] = $row["investments_planned"];
+		$output["consumables_planned"] = $row["consumables_planned"];
+		$output["services_planned"] = $row["services_planned"];
+		$output["transport_planned"] = $row["transport_planned"];
+		$output["personnel_actual"] = $row["personnel_actual"];
 		$output["investments_actual"] = $row["investments_actual"];
+		$output["consumables_actual"] = $row["consumables_actual"];
 		$output["services_actual"] = $row["services_actual"];
 		$output["transport_actual"] = $row["transport_actual"];
-		$output["personnel_actual"] = $row["personnel_actual"];
-		$output["consumables_actual"] = $row["consumables_actual"];
 		$output["admin"] = $row["admin"];
                 $output["cum_personnel"] = $row["cum_personnel"];
                 $output["cum_investments"] = $row["cum_investments"];
@@ -80,13 +87,13 @@ class load_figures_data extends load
                 $output["cum_services_euro"] = $row["cum_services_euro"];
                 $output["cum_transport_euro"] = $row["cum_transport_euro"];
                 $output["cum_admin_euro"] = $row["cum_admin_euro"];
+                $output["cum_received"] = $row["cum_received"];
+                $output["cum_received_euro"] = $row["cum_received_euro"];
 		$output["prev_xrate"] = $row["prev_xrate"];
 		$output["prev_unused"] = $row["prev_unused"];
-		$output["xrate_requested"] = $row["xrate_requested"];
 		$output["xrate"] = $row["xrate"];
 		$output["received"] = $row["received"];
 		$output["received_date"] = $row["received_date"];
-		$output["unused"] = $row["unused"];
 		$output["livexrate"] = $row["livexrate"];
 		$output["currency"] = $row["currency"];
 		$output["total"] = $row["investments"]+$row["services"]+$row["transport"]+$row["personnel"]+$row["consumables"];

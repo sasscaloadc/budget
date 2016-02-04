@@ -12,12 +12,13 @@
 <script>
 $.ajaxSetup({cache: false}); // This is to prevent caching in IE
 
-var access = <?php echo $_SESSION['access'] ?>
+var access = <?php echo $_SESSION['access'] ?>;
+var location_url = "<?php echo $location_url ?>";
 
 if (access == 1) {
-	window.location.href = "http://caprivi.sasscal.org/budget/admin_main.php";
+	window.location.href = location_url+"admin_main.php";
 } else {
-	window.location.href = "http://caprivi.sasscal.org/budget/pi_main.php";
+	window.location.href = location_url+"pi_main.php";
 }
 </script> 
 </head>

@@ -71,7 +71,6 @@ require_once("db.php");
                         "    VALUES (".$taskid.", ".$next_year.", ".$next_quarter.", ".$prev_unused.", ".$prev_xrate.", 1)";
 	}
 
-//error_log($sql);
 	$conn = getConnection();
 
 	$result = pg_query($conn, $sql);

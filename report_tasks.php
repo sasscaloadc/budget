@@ -1,7 +1,7 @@
 <?php
 	include 'check_access.php';
 	if ($_SESSION["access"] > 1) {
-		header("Location: http://caprivi.sasscal.org/budget/no_access.php");
+		header("Location: ".$location_url."no_access.php");
 	} else {
 	//	echo "Logged in as ".$_SESSION['firstname'];
 	}

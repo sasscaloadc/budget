@@ -8,6 +8,8 @@
     <title>Principle Investigator Main Menu</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>
+var location_url = "<?php echo $location_url ?>";
+
         $(document).ready(function(){
 
 		var d = new Date();	
@@ -24,34 +26,36 @@
 		thisyear = d.getFullYear();
 		nextq = thisquarter < 4 ? thisquarter + 1 : 1;
 		previousq = thisquarter > 1 ? thisquarter - 1 : 4;
-		//nextnextq = nextq < 4 ? nextq + 1 : 1;
 		nexty = thisquarter < 4 ? thisyear : thisyear + 1;
 		previousy = thisquarter > 1 ? thisyear : thisyear - 1;
-		//nextnexty = nextq < 4 ? nexty : nexty + 1;
 
 		$("#expense_quarter").html("(Q"+previousq+" "+previousy+")");
 		$("#next_quarter").html("(Q"+thisquarter+" "+thisyear+", Q"+nextq+" "+nexty+")");
 
                 $("#report_go").click(function() {
-                        window.location.href = "http://caprivi.sasscal.org/budget/pi_expense.php?taskid="+$("#tasks").val().trim()+"&year="+previousy+"&quarter="+previousq;
+                        window.location.href = location_url+"pi_expense.php?taskid="+$("#tasks").val().trim()+"&year="+previousy+"&quarter="+previousq;
                 });
 
                 $("#budget_go").click(function() {
-                        window.location.href = "http://caprivi.sasscal.org/budget/report_quarterly.php?taskid="+$("#quarterly").val().trim()+"&year="+$("#year").val().trim()+"&quarter="+$("#quarter").val().trim();
+                        window.location.href = location_url+"pi_budget.php?taskid="+$("#tasks").val().trim()+"&year="+thisyear+"&quarter="+thisquarter;
                 });
 
                 $("#reports_go").click(function() {
-                        window.location.href = "http://caprivi.sasscal.org/budget/report_quarterly.php?taskid="+$("#quarterly").val().trim()+"&year="+$("#year").val().trim()+"&quarter="+$("#quarter").val().trim();
+                        window.location.href = location_url+"report_cumulative.php?taskid="+$("#tasks").val().trim();
+                });
+
+                $("#request_go").click(function() {
+                        window.location.href = location_url+"report_request.php?taskid="+$("#tasks").val().trim()+"&year="+thisyear+"&quarter="+thisquarter;
                 });
 
                 $("#cancel").click(function() {
-                        window.location.href = "http://caprivi.sasscal.org/budget/index.php";
+                        window.location.href = location_url+"index.php";
                 });
 		
         	$("#tasks").load("load_tasklist.php?database=budget");
 
 	        $("#logout").click(function() {
-                        window.location.href = "http://caprivi.sasscal.org/budget/logout.php";
+                        window.location.href = location_url+"logout.php";
                     });
 
         });
@@ -96,7 +100,7 @@
      </span></p>
 
     <p>
-    <table  border="0">
+    <table border="0">
       <tbody id="task">
         <tr>
 	  <td>
@@ -108,7 +112,7 @@
 	  <td>&nbsp;</td>
 	</tr>
 	<tr>
-	  <td> Submit Expense Report <span id="expense_quarter"></span>
+	  <td> Submit Expenditure Report <span id="expense_quarter"></span>
 	  </td>
 	  <td> 
 	    <input type="button" id="report_go" value="Go"/>
@@ -121,9 +125,15 @@
 	  </td>
 	</tr>
         <tr>
-	  <td> View Reports </td>
+	  <td> Task Cumulative Report </td>
 	  <td> 
 	    <input type="button" id="reports_go" value="Go"/>
+	  </td>
+	</tr>
+        <tr>
+	  <td> Print Request for Payment </td>
+	  <td> 
+	    <input type="button" id="request_go" value="Go"/>
 	  </td>
 	</tr>
     </table>

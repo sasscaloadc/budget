@@ -1,5 +1,7 @@
 <?php
 
+    $location_url = "http://caprivi.sasscal.org/budget/";
+
     session_cache_expire( 20 );
     session_start(); // NEVER FORGET TO START THE SESSION!!!
     $inactive = 1200;
@@ -13,7 +15,7 @@
  
 
     if (!is_numeric($_SESSION['access'])) {
-          header("Location: http://caprivi.sasscal.org/budget/login.php?redirect=".urlencode($_SERVER['PHP_SELF']));
+          header("Location: ".$location_url."login.php?redirect=".urlencode($_SERVER['PHP_SELF']));
     }
 
 ?>

@@ -43,7 +43,7 @@ if (is_numeric($output)) {
 	$_SESSION['access'] = $output;
 	$_SESSION['username'] = $username;
 	$_SESSION['firstname'] = $firstname;
-	header("Location: http://caprivi.sasscal.org".$redirect);
+	header("Location: ".$location_url.$redirect);
 	#header("Location: https://budget.sasscal.org/".$redirect);
 	die();
 } else {
@@ -55,7 +55,7 @@ if (is_numeric($output)) {
 	$postvars = http_build_query($fields);
 	$ch = curl_init();
 	#curl_setopt($ch, CURLOPT_URL, "https://budget.sasscal.org/login.php");
-	curl_setopt($ch, CURLOPT_URL, "http://caprivi.sasscal.org/budget/login.php");
+	curl_setopt($ch, CURLOPT_URL, $location_url."login.php");
 	curl_setopt($ch, CURLOPT_POST, count($fields));
 	curl_setopt($ch, CURLOPT_POSTFIELDS, $postvars);
 

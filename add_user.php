@@ -2,7 +2,7 @@
 include "check_access.php";
 
 if ($_SESSION['access'] > 1)  {
-        header("Location: http://caprivi.sasscal.org/budget/no_access.php");
+        header("Location: ".$location_url."no_access.php");
 }
 ?>
 <!DOCTYPE html>
@@ -12,10 +12,12 @@ if ($_SESSION['access'] > 1)  {
     <title>Add User</title>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>
+var location_url = "<?php echo $location_url ?>";
+
         $(document).ready(function(){
 
                 $("#cancel").click(function() {
-                        window.location.href = "http://caprivi.sasscal.org/budget/index.php";
+                        window.location.href = location_url+"index.php";
                 });
 
 		$("#save").click(function() { 
@@ -44,7 +46,7 @@ if ($_SESSION['access'] > 1)  {
                                 setTimeout(function() {
 					$("#submit_message").html("");
 					if (saved) {
-						window.location.href = "http://caprivi.sasscal.org/budget/index.php";
+						window.location.href = location_url+"index.php";
 					}
 				}, 3000);
                         });

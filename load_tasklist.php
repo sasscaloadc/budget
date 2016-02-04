@@ -1,10 +1,11 @@
 <?php
+require_once("check_access.php");
 require_once("load.php");
 
 
         session_start();
         if (!is_numeric($_SESSION['access'])) {
-                header("Location: http://caprivi.sasscal.org/budget/login.php?redirect=".urlencode("/budget/index.php"));
+                header("Location: ".$location_url."login.php?redirect=".urlencode("/budget/index.php"));
         }
 
 

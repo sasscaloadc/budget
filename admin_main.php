@@ -11,6 +11,7 @@
 <script src="https://ajax.googleapis.com/ajax/libs/jqueryui/1.11.4/jquery-ui.min.js"></script>
 <script>
 $.ajaxSetup({cache: false}); // This is to prevent caching in IE
+var location_url = "<?php echo $location_url ?>";
 
 var task;
 var wxr = 1;
@@ -142,7 +143,7 @@ function load_figures() {
 			budget = JSON.parse(data);
 			$("#heading_available").html("Available Budget (Euro)");
 			switch (budget.status) {
-			   case "1":
+				/*
 				$("#taskstatus").html("Capturing Estimates for Quarter");
 				$("[id*='requested']").hide();
 				$("[id*='unused']").hide();
@@ -175,6 +176,8 @@ function load_figures() {
 				$("#transport_available").html(roundToTwo(task.transport_budget - budget.cum_transport_euro ));
 				$("#personnel_available").html(roundToTwo(task.personnel_budget - budget.cum_personnel_euro ));
 				break;
+				*/
+			   case "1":  // case 1 has fallen away
 			   case "2":
 				$("#taskstatus").html("Capturing Funds Received and Actual Expenditures");
 				$("[id*='requested']").show();
@@ -185,7 +188,8 @@ function load_figures() {
 				$(".stage1").hide();
 				$(".stage2").show();
 				$("#stat1_save").hide();
-				$("#stat2_save").show();
+				$("#stat2_save").hide();
+				$("#receive_button").show();
 
 				$("#heading_requested").html("Requested "+budget.currency);
 				$("#heading_local").html("Spent "+budget.currency);
@@ -196,24 +200,23 @@ function load_figures() {
 				$("#consumables_requested").html(money(budget.consumables));
 				$("#transport_requested").html(money(budget.transport));
 				$("#personnel_requested").html(money(budget.personnel));
-				$("#investments_local").html("<input type=\"text\" id=\"investments_local_input\" value=\""+budget.investments_actual+"\" onchange=\"update_value($(this))\"/>");
-				$("#services_local").html("<input type=\"text\" id=\"services_local_input\" value=\""+budget.services_actual+"\" onchange=\"update_value($(this))\"/>");
-				$("#consumables_local").html("<input type=\"text\" id=\"consumables_local_input\" value=\""+budget.consumables_actual+"\" onchange=\"update_value($(this))\"/>");
-				$("#transport_local").html("<input type=\"text\" id=\"transport_local_input\" value=\""+budget.transport_actual+"\" onchange=\"update_value($(this))\"/>");
-				$("#personnel_local").html("<input type=\"text\" id=\"personnel_local_input\" value=\""+budget.personnel_actual+"\" onchange=\"update_value($(this))\"/>");
-				$("#admin_local").html("<input type=\"text\" id=\"admin_local_input\" value=\""+budget.admin+"\" onchange=\"update_value($(this))\"/>");
+				//$("#investments_local").html("<input type=\"text\" id=\"investments_local_input\" value=\""+budget.investments_actual+"\" onchange=\"update_value($(this))\"/>");
+				//$("#services_local").html("<input type=\"text\" id=\"services_local_input\" value=\""+budget.services_actual+"\" onchange=\"update_value($(this))\"/>");
+				//$("#consumables_local").html("<input type=\"text\" id=\"consumables_local_input\" value=\""+budget.consumables_actual+"\" onchange=\"update_value($(this))\"/>");
+				//$("#transport_local").html("<input type=\"text\" id=\"transport_local_input\" value=\""+budget.transport_actual+"\" onchange=\"update_value($(this))\"/>");
+				//$("#personnel_local").html("<input type=\"text\" id=\"personnel_local_input\" value=\""+budget.personnel_actual+"\" onchange=\"update_value($(this))\"/>");
+				//$("#admin_local").html("<input type=\"text\" id=\"admin_local_input\" value=\""+budget.admin+"\" onchange=\"update_value($(this))\"/>");
+                                $("#investments_local").html(money(budget.investments_actual));
+                                $("#services_local").html(money(budget.services_actual));
+                                $("#consumables_local").html(money(budget.consumables_actual));
+                                $("#transport_local").html(money(budget.transport_actual));
+                                $("#personnel_local").html(money(budget.personnel_actual));
+                                $("#admin_local").html(money(budget.admin));
+
 				if (budget.received_date == null) {
 					$("#funds_received_local").html("0");
 					$("#funds_received_rate").html("0");
-					$("#funds_received_euro").html("<input id=\"record_receipt\" type=\"button\" value=\"Record Receipt\" />");
-					<?php
-						if ($_SESSION["access"] > 1) {
-							echo " $(\"#record_receipt\").prop(\"disabled\",true); ";
-						} else {
-							echo " $(\"#record_receipt\").prop(\"disabled\",false); ";
-							echo " $(\"#record_receipt\").click(function() { load_receive(); });";
-						}
-					?>
+					$("#funds_received_euro").html("0");
 				} else {
 					$("#funds_received_local").html(money(budget.received));
 					$("#funds_received_rate").html(budget.xrate);
@@ -338,12 +341,13 @@ function load_receive() {
 	$("#receive").show(); 
 	$("#submit_rec").prop("disabled",false);
 	$("#cancel").prop("disabled",false);
+	$("#submit_rec_message").html("");
 	
 	$("#received_date").datepicker({ dateFormat: "yy-mm-dd" });
 
-	$("#received_local").val("");
-	$("#received_date").val("");
-	$("#received_xrate").val("");
+	$("#received_local").val(budget.received > 0 ? budget.received : "");
+	$("#received_date").val(budget.received > 0 ? budget.received_date : "");
+	$("#received_xrate").val(budget.received > 0 ? budget.xrate : "");
 }
 
 function save_values(status, saving, type) {
@@ -455,21 +459,22 @@ $(document).ready(function(){
 				}); 
 
 	$("#adduser").click(function() { 
-			window.location.href = "http://caprivi.sasscal.org/budget/add_user.php";
+			window.location.href = location_url+"add_user.php";
 				}); 
 
 	$("#addtask").click(function() { 
-			window.location.href = "http://caprivi.sasscal.org/budget/add_task.php";
+			window.location.href = location_url+"add_task.php";
 				}); 
 
 	$("#reports").click(function() { 
-			window.location.href = "http://caprivi.sasscal.org/budget/reports.php";
+			window.location.href = location_url+"reports.php";
 				}); 
 
 	$("#logout").click(function() { 
-			window.location.href = "http://caprivi.sasscal.org/budget/logout.php";
+			window.location.href = location_url+"logout.php";
 				}); 
 
+	$("#record_receipt").click(function() { load_receive(); });
 	$("#receive").hide();
 	$("#save_1").click(function() { save_values(1, true, "figures"); });
 	$("#submit_1").click(function() { save_values(2, false, "figures"); });
@@ -661,6 +666,9 @@ Tool</span></p>
           <tr><td>&nbsp;</td>
               <td><span id="euro_requested"></span></td>
               <td colspan="2"> 
+	          <span id="receive_button">
+			<input id="record_receipt" type="button" value="Record Receipt" />
+	          </span>
 	          <span id="stat1_save">
 				  <input type="button" value="Save"   id="save_1">
                                   <input type="button" value="Submit" id="submit_1">

@@ -43,9 +43,25 @@ require_once("db.php");
         if (empty($transport)) {
                 $transport = array_key_exists("transport",$_POST) ?  $_POST["transport"] : "";
         }
-        $admin = array_key_exists("admin",$_GET) ?  $_GET["admin"] : "";
-        if (empty($admin)) {
-                $admin = array_key_exists("admin",$_POST) ?  $_POST["admin"] : "";
+        $investments_planned = array_key_exists("investments_planned",$_GET) ?  $_GET["investments_planned"] : "";
+        if (empty($investments_planned)) {
+                $investments_planned = array_key_exists("investments_planned",$_POST) ?  $_POST["investments_planned"] : "";
+        }
+        $personnel_planned = array_key_exists("personnel_planned",$_GET) ?  $_GET["personnel_planned"] : "";
+        if (empty($personnel_planned)) {
+                $personnel_planned = array_key_exists("personnel_planned",$_POST) ?  $_POST["personnel_planned"] : "";
+        }
+        $services_planned = array_key_exists("services_planned",$_GET) ?  $_GET["services_planned"] : "";
+        if (empty($services_planned)) {
+                $services_planned = array_key_exists("services_planned",$_POST) ?  $_POST["services_planned"] : "";
+        }
+        $consumables_planned = array_key_exists("consumables_planned",$_GET) ?  $_GET["consumables_planned"] : "";
+        if (empty($consumables_planned)) {
+                $consumables_planned = array_key_exists("consumables_planned",$_POST) ?  $_POST["consumables_planned"] : "";
+        }
+        $transport_planned = array_key_exists("transport_planned",$_GET) ?  $_GET["transport_planned"] : "";
+        if (empty($transport_planned)) {
+                $transport_planned = array_key_exists("transport_planned",$_POST) ?  $_POST["transport_planned"] : "";
         }
 
 	$sql = " UPDATE budget SET investments = ".(empty($investments) ? "0" : $investments).
@@ -53,7 +69,6 @@ require_once("db.php");
                                    ", services = ".(empty($services) ? "0" : $services).
                                 ", consumables = ".(empty($consumables) ? "0" : $consumables).
                                   ", transport = ".(empty($transport) ? "0" : $transport).
-                                  ", admin = ".(empty($admin) ? "0" : $admin).
 	       (empty($status) ? "" : ", status = ".$status) .
                " WHERE task_id = ".$taskid." AND year = ".$year." AND quarter = ".$quarter;
 
@@ -61,7 +76,22 @@ require_once("db.php");
 
 	$result = pg_query($conn, $sql);
         if ($result) {
-                echo "OK";
+		// this would mean that the database trigger will have created the next quarter
+		$nexty = $quarter == 4 ? $year + 1 : $year;
+		$nextq = $quarter == 4 ? 1 : $quarter + 1;
+		$sql = " UPDATE budget SET investments_planned = ".(empty($investments_planned) ? "0" : $investments_planned).
+                                  	", personnel_planned = ".(empty($personnel_planned) ? "0" : $personnel_planned).
+                                   	", services_planned = ".(empty($services_planned) ? "0" : $services_planned).
+                                	", consumables_planned = ".(empty($consumables_planned) ? "0" : $consumables_planned).
+                                  	", transport_planned = ".(empty($transport_planned) ? "0" : $transport_planned).
+	       		(empty($status) ? "" : ", status = ".$status) .
+               		" WHERE task_id = ".$taskid." AND year = ".$nexty." AND quarter = ".$nextq;
+		$result = pg_query($conn, $sql);
+        	if ($result) {
+                	echo "OK";
+        	} else {
+                	echo pg_last_error($conn);
+        	};
         } else {
                 echo pg_last_error($conn);
         }
