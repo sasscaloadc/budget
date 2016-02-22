@@ -1,6 +1,6 @@
 <?php
 
-    $location_url = "http://caprivi.sasscal.org/budget/";
+    $location_url = "https://budget.sasscal.org/";
 
     session_cache_expire( 20 );
     session_start(); // NEVER FORGET TO START THE SESSION!!!

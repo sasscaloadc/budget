@@ -80,15 +80,12 @@ function toEuro(amount, budget) {
 
 function update_totals() {
 
-		tot_estimate = eval($("#personnel_estimate").html()) + eval($("#investments_estimate").html()) + eval($("#consumables_estimate").html()) 
-				+ eval($("#services_estimate").html()) + eval($("#transport_estimate").html()) ;
+		tot_estimate = eval($("#personnel_estimate").val()) + eval($("#investments_estimate").val()) + eval($("#consumables_estimate").val()) 
+				+ eval($("#services_estimate").val()) + eval($("#transport_estimate").val()) ;
         	$("#total_estimate").html( money(tot_estimate));
-		tot_planned = eval($("#personnel_planned").html()) + eval($("#investments_planned").html()) + eval($("#consumables_planned").html()) 
-				+ eval($("#services_planned").html()) + eval($("#transport_planned").html()) ;
+		tot_planned = eval($("#personnel_planned").val()) + eval($("#investments_planned").val()) + eval($("#consumables_planned").val()) 
+				+ eval($("#services_planned").val()) + eval($("#transport_planned").val()) ;
         	$("#total_planned").html( money(tot_planned));
-		tot_local = eval($("#personnel_local").html()) + eval($("#investments_local").html()) + eval($("#consumables_local").html()) 
-				+ eval($("#services_local").html()) + eval($("#transport_local").html()) + eval($("#admin_local").html()) ;
-        	$("#total_local").html( money(tot_local));
 }
 
 function save_values() {
@@ -110,7 +107,8 @@ function save_values() {
 
 			taskid: taskid,
 			year: year,
-			quarter: quarter
+			quarter: quarter,
+			status: 2
 		},
 		function(data, status){
 			if (data == "OK") {
@@ -188,12 +186,19 @@ $(document).ready(function(){
                         window.location.href = location_url+"logout.php";
                 });
 
-	$("#personnel_local").change(function() { check_amount("personnel", budgetprevious.cum_personnel);});
-	$("#investments_local").change(function() { check_amount("investments", budgetprevious.cum_investments);});
-	$("#consumables_local").change(function() { check_amount("consumables", budgetprevious.cum_consumables);});
-	$("#services_local").change(function() { check_amount("services", budgetprevious.cum_services);});
-	$("#transport_local").change(function() { check_amount("transport", budgetprevious.cum_transport);});
-	$("#admin_local").change(function() { check_amount("admin", budgetprevious.cum_admin);});
+	$("#personnel_estimate").change(function() { update_totals() });
+	$("#investments_estimate").change(function() { update_totals() });
+	$("#consumables_estimate").change(function() { update_totals() });
+	$("#services_estimate").change(function() { update_totals() });
+	$("#transport_estimate").change(function() { update_totals() });
+	$("#admin_estimate").change(function() { update_totals() });
+
+	$("#personnel_planned").change(function() { update_totals() });
+	$("#investments_planned").change(function() { update_totals() });
+	$("#consumables_planned").change(function() { update_totals() });
+	$("#services_planned").change(function() { update_totals() });
+	$("#transport_planned").change(function() { update_totals() });
+	$("#admin_planned").change(function() { update_totals() });
 
 	$("#actual").append("  Q"+previousq+" "+previousy);
 	$("#estimated").append("  Q"+quarter+" "+year);

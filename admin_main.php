@@ -143,40 +143,6 @@ function load_figures() {
 			budget = JSON.parse(data);
 			$("#heading_available").html("Available Budget (Euro)");
 			switch (budget.status) {
-				/*
-				$("#taskstatus").html("Capturing Estimates for Quarter");
-				$("[id*='requested']").hide();
-				$("[id*='unused']").hide();
-				$("[id*='surplus']").show();
-				$("[id*='funds']").hide();
-				$("[id*='weighted']").hide();
-				$("#stat1_save").show();
-				$("#stat2_save").hide();
-				$(".stage1").show();
-				$(".stage2").hide();
-				$("#heading_local").html("Estimates "+budget.currency);
-				$("#heading_euro").html("Estimates Euro");
-
-				$("#investments_local").html("<input type=\"text\" id=\"investments_local_input\" value=\""+budget.investments+"\" onchange=\"update_value($(this))\"/>");
-				$("#investments_euro").html("<input type=\"text\" id=\"investments_euro_input\" value=\""+roundToTwo(budget.investments/ budget.livexrate)+"\" onchange=\"update_value($(this))\"/>");
-				$("#services_local").html("<input type=\"text\" id=\"services_local_input\" value=\""+budget.services+"\" onchange=\"update_value($(this))\"/>");
-				$("#services_euro").html("<input type=\"text\" id=\"services_euro_input\" value=\""+roundToTwo(budget.services/ budget.livexrate)+"\" onchange=\"update_value($(this))\"/>");
-				$("#consumables_local").html("<input type=\"text\" id=\"consumables_local_input\" value=\""+budget.consumables+"\" onchange=\"update_value($(this))\"/>");
-				$("#consumables_euro").html("<input type=\"text\" id=\"consumables_euro_input\" value=\""+roundToTwo(budget.consumables/ budget.livexrate)+"\" onchange=\"update_value($(this))\"/>");
-				$("#transport_local").html("<input type=\"text\" id=\"transport_local_input\" value=\""+budget.transport+"\" onchange=\"update_value($(this))\"/>");
-				$("#transport_euro").html("<input type=\"text\" id=\"transport_euro_input\" value=\""+roundToTwo(budget.transport/ budget.livexrate)+"\" onchange=\"update_value($(this))\"/>");
-				$("#personnel_local").html("<input type=\"text\" id=\"personnel_local_input\" value=\""+budget.personnel+"\" onchange=\"update_value($(this))\"/>");
-				$("#personnel_euro").html("<input type=\"text\" id=\"personnel_euro_input\" value=\""+roundToTwo(budget.personnel/ budget.livexrate)+"\" onchange=\"update_value($(this))\"/>");
-				$("#admin_local").html("");
-				wxr = calc_weighted_rate(budget);
-
-				$("#investments_available").html(roundToTwo(task.investments_budget - budget.cum_investments_euro ));
-				$("#services_available").html(roundToTwo(task.services_budget - budget.cum_services_euro ));
-				$("#consumables_available").html(roundToTwo(task.consumables_budget - budget.cum_consumables_euro ));
-				$("#transport_available").html(roundToTwo(task.transport_budget - budget.cum_transport_euro ));
-				$("#personnel_available").html(roundToTwo(task.personnel_budget - budget.cum_personnel_euro ));
-				break;
-				*/
 			   case "1":  // case 1 has fallen away
 			   case "2":
 				$("#taskstatus").html("Capturing Funds Received and Actual Expenditures");
@@ -195,17 +161,12 @@ function load_figures() {
 				$("#heading_local").html("Spent "+budget.currency);
 				$("#heading_euro").html("Spent Euro");
 
-				$("#investments_requested").html(money(budget.investments));
-				$("#services_requested").html(money(budget.services));
-				$("#consumables_requested").html(money(budget.consumables));
-				$("#transport_requested").html(money(budget.transport));
-				$("#personnel_requested").html(money(budget.personnel));
-				//$("#investments_local").html("<input type=\"text\" id=\"investments_local_input\" value=\""+budget.investments_actual+"\" onchange=\"update_value($(this))\"/>");
-				//$("#services_local").html("<input type=\"text\" id=\"services_local_input\" value=\""+budget.services_actual+"\" onchange=\"update_value($(this))\"/>");
-				//$("#consumables_local").html("<input type=\"text\" id=\"consumables_local_input\" value=\""+budget.consumables_actual+"\" onchange=\"update_value($(this))\"/>");
-				//$("#transport_local").html("<input type=\"text\" id=\"transport_local_input\" value=\""+budget.transport_actual+"\" onchange=\"update_value($(this))\"/>");
-				//$("#personnel_local").html("<input type=\"text\" id=\"personnel_local_input\" value=\""+budget.personnel_actual+"\" onchange=\"update_value($(this))\"/>");
-				//$("#admin_local").html("<input type=\"text\" id=\"admin_local_input\" value=\""+budget.admin+"\" onchange=\"update_value($(this))\"/>");
+				$("#investments_requested").html(money(budget.investments_planned));
+				$("#services_requested").html(money(budget.services_planned));
+				$("#consumables_requested").html(money(budget.consumables_planned));
+				$("#transport_requested").html(money(budget.transport_planned));
+				$("#personnel_requested").html(money(budget.personnel_planned));
+
                                 $("#investments_local").html(money(budget.investments_actual));
                                 $("#services_local").html(money(budget.services_actual));
                                 $("#consumables_local").html(money(budget.consumables_actual));
@@ -416,6 +377,7 @@ function go(direction) {
 	if (direction == "next") {
 		if ($("#quarters").prop("selectedIndex") < $("#quarters").prop("length") - 1) {
 				$("#quarters").prop("selectedIndex", $("#quarters").prop("selectedIndex") + 1);
+//alert("loading");
 				load_figures();
 			} else {
 				$("#years").prop("selectedIndex", $("#years").prop("selectedIndex") + 1);
@@ -427,6 +389,7 @@ function go(direction) {
 				load_quarters(4);
 			} else {
 				$("#quarters").prop("selectedIndex", $("#quarters").prop("selectedIndex") - 1);
+//alert("loading2");
 				load_figures();
 			}
 	}

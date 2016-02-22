@@ -4,7 +4,7 @@
  
 
         function getConnection() {
-		$servername = "caprivi.sasscal.org";
+		$servername = "afrihost.sasscal.org";
 		$username = "postgres";
 		$password = "5455c4l_";
 		$dbname = "budget";

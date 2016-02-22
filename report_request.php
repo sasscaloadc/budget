@@ -179,10 +179,12 @@ $(document).ready(function(){
 				$("#btotal").html(money(tot_total));
 
 				$("#breceived").html(money(budget.cum_received_euro));
-				$("#bprevious").html(money(budget.prev_unused / budget.prev_xrate));
-				$("#brequested").html(money(tot_total - budget.cum_received_euro - (budget.prev_unused / budget.prev_xrate)));
-				$("#badmin").html(money((tot_total - budget.cum_received_euro - (budget.prev_unused / budget.prev_xrate)) * 0.15));
-				$("#brequestedtotal").html(money((tot_total - budget.cum_received_euro - (budget.prev_unused / budget.prev_xrate)) * 1.15));
+				//$("#bprevious").html(money(budget.prev_unused / budget.prev_xrate));
+				$("#bprevious").html(money(0));
+				$("#brequested").html(money(tot_total - budget.cum_received_euro));
+				//$("#badmin").html(money((tot_total - budget.cum_received_euro) * 0.15));
+				$("#badmin").html(money(0));
+				$("#brequestedtotal").html(money(tot_total - budget.cum_received_euro));
         		});
         	});
         });

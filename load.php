@@ -8,7 +8,7 @@ abstract class load {
 /*
  *  These details can be stored in a .conf file
  */
-	static $servername = "caprivi.sasscal.org";
+	static $servername = "afrihost.sasscal.org";
 	static $DBservername = "localhost";
 	static $username = "postgres";
 	static $password = "5455c4l_";
