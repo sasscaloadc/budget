@@ -11,7 +11,7 @@ include 'check_access.php';
         }
 
 	$sql = "";
-	if ($_SESSION['access'] == 1) {
+	if ($_SESSION['access'] <= 1) {
                 $sql = "SELECT year FROM budget WHERE task_id = ".$taskid." AND status >= 3 GROUP BY year ORDER BY year ";
 	} else {
                 $sql = "SELECT year FROM budget b INNER JOIN task t on b.task_id = t.id 
@@ -21,7 +21,6 @@ include 'check_access.php';
 			GROUP BY year
 			ORDER BY year ";
 	}
-error_log("==>".$sql);
 
 	$conn = getConnection();
         $result = pg_query($conn, $sql);

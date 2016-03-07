@@ -19,7 +19,7 @@ include 'check_access.php';
         }
 
         $sql = "";
-        if ($_SESSION['access'] == 1) {
+        if ($_SESSION['access'] <= 1) {
                 $sql = "SELECT quarter FROM budget WHERE task_id = ".$taskid." AND year = ".$year." AND status >= 3 ORDER BY quarter ";
         } else {
                 $sql = "SELECT quarter FROM budget b INNER JOIN task t on b.task_id = t.id

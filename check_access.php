@@ -1,6 +1,6 @@
 <?php
 
-    $location_url = "https://budget.sasscal.org/";
+    $location_url = "https://budget.sasscal.org/"; // This is changed in 2 places. Here and in access.php
 
     session_cache_expire( 20 );
     session_start(); // NEVER FORGET TO START THE SESSION!!!

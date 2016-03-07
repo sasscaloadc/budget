@@ -2,8 +2,6 @@
 	include 'check_access.php';
 	if ($_SESSION["access"] > 1) {
 		header("Location: ".$location_url."no_access.php");
-	} else {
-	//	echo "Logged in as ".$_SESSION['firstname'];
 	}
 ?>
 <!DOCTYPE html>
@@ -59,27 +57,28 @@ require_once("db.php");
 	$sql = " SELECT year, task_id, 
                     (SELECT  (personnel + investments + consumables + services + transport) 
                      FROM budget b WHERE b.year = k.year and b.task_id = k.task_id and quarter = 1) as q1_budget,
-                    (SELECT  (personnel_actual + investments_actual + consumables_actual + services_actual + transport_actual) 
+                    (SELECT  (personnel_actual + investments_actual + consumables_actual + services_actual + transport_actual + admin) 
                      FROM budget b WHERE b.year = k.year and b.task_id = k.task_id and quarter = 1) as q1_spent,
                     (SELECT  (personnel + investments + consumables + services + transport) 
                      FROM budget b WHERE b.year = k.year and b.task_id = k.task_id and quarter = 2) as q2_budget,
-                    (SELECT  (personnel_actual + investments_actual + consumables_actual + services_actual + transport_actual) 
+                    (SELECT  (personnel_actual + investments_actual + consumables_actual + services_actual + transport_actual + admin) 
                      FROM budget b WHERE b.year = k.year and b.task_id = k.task_id and quarter = 2) as q2_spent,
                     (SELECT  (personnel + investments + consumables + services + transport) 
                      FROM budget b WHERE b.year = k.year and b.task_id = k.task_id and quarter = 3) as q3_budget,
-                    (SELECT  (personnel_actual + investments_actual + consumables_actual + services_actual + transport_actual) 
+                    (SELECT  (personnel_actual + investments_actual + consumables_actual + services_actual + transport_actual + admin) 
                      FROM budget b WHERE b.year = k.year and b.task_id = k.task_id and quarter = 3) as q3_spent,
                     (SELECT  (personnel + investments + consumables + services + transport) 
                      FROM budget b WHERE b.year = k.year and b.task_id = k.task_id and quarter = 4) as q4_budget,
-                    (SELECT  (personnel_actual + investments_actual + consumables_actual + services_actual + transport_actual) 
+                    (SELECT  (personnel_actual + investments_actual + consumables_actual + services_actual + transport_actual + admin) 
                      FROM budget b WHERE b.year = k.year and b.task_id = k.task_id and quarter = 4) as q4_spent,
                     (SELECT SUM(personnel + investments + consumables + services + transport) 
                      FROM budget b WHERE b.year = k.year and b.task_id = k.task_id ) as budget_total,
-                    (SELECT SUM(personnel_actual + investments_actual + consumables_actual + services_actual + transport_actual) 
+                    (SELECT SUM(personnel_actual + investments_actual + consumables_actual + services_actual + transport_actual + admin) 
                      FROM budget b WHERE b.year = k.year and b.task_id = k.task_id ) as spent_total
-                 FROM budget k
-                 group by 1, 2
-                 order by 1, 2";
+                 FROM budget k INNER JOIN task t on t.id = k.task_id
+		 WHERE country = '".$_SESSION['country']."'
+                 GROUP BY 1, 2
+                 ORDER BY 1, 2";
 	
 	$yearObject = 0;
 	$total_budget_q1 = $total_budget_q2 = $total_budget_q3 = $total_budget_q4 = 0;

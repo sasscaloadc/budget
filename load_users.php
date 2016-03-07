@@ -5,7 +5,12 @@ class load_users extends load
 {
 
         public function get_sql() {
-                $sql = "SELECT * FROM access WHERE level = 2 ORDER BY firstname, lastname";
+                $country = array_key_exists("country",$_GET) ?  $_GET["country"] : "";
+                if (empty($country)) {
+                        $country = array_key_exists("country",$_POST) ?  $_POST["country"] : "";
+                }
+
+                $sql = "SELECT * FROM access WHERE level = 2 AND country = '".$country."' ORDER BY firstname, lastname";
 		return $sql;
         }
 

@@ -16,6 +16,10 @@ var location_url = "<?php echo $location_url ?>";
                         window.location.href = location_url+"report_tasks.php";
                 });
 
+                $("#tasks_euro").click(function() {
+                        window.location.href = location_url+"report_tasks_euro.php";
+                });
+
         	$("#cumulative").load("load_tasklist.php?database=budget", function(){
 			//
             	});
@@ -80,6 +84,11 @@ var location_url = "<?php echo $location_url ?>";
         <tr>
 	  <td> Tasks Report </td>
 	  <td> <input type="button" id="tasks" value="Go"/>
+	  </td>
+	</tr>
+        <tr>
+	  <td> Tasks Report (Euro)</td>
+	  <td> <input type="button" id="tasks_euro" value="Go"/>
 	  </td>
 	</tr>
         <tr>

@@ -13,6 +13,7 @@ if ($_SESSION['access'] > 1)  {
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>
 var location_url = "<?php echo $location_url ?>";
+var country = "<?php echo $_SESSION['country'] ?>";
 
         $(document).ready(function(){
 
@@ -26,6 +27,7 @@ var location_url = "<?php echo $location_url ?>";
 				setTimeout(function() {$("#submit_message").html("");}, 3000);
 				return;
 			}
+			$("#save").prop("disabled", true);
                 	$.post("create_user.php",
                         {
 				database: "budget",
@@ -33,6 +35,7 @@ var location_url = "<?php echo $location_url ?>";
                                 password: $("#password").val(),
                                 firstname: $("#firstname").val(),
                                 lastname: $("#lastname").val(),
+                                country: $("#country").val(),
                                 level: $("#level").val(),
                         },
                         function(data, status){
@@ -45,6 +48,7 @@ var location_url = "<?php echo $location_url ?>";
                                 }
                                 setTimeout(function() {
 					$("#submit_message").html("");
+					$("#save").prop("disabled", false);
 					if (saved) {
 						window.location.href = location_url+"index.php";
 					}
@@ -52,6 +56,8 @@ var location_url = "<?php echo $location_url ?>";
                         });
 
 		});
+
+		$("#country").val(country);
         });
     </script>
     <style  type="text/css">
@@ -107,10 +113,23 @@ body {
 	  </td>
 	</tr>
         <tr>
+          <td> Country </td>
+          <td>
+                <select id="country">
+                   <option>Angola</option>
+                   <option>Botswana</option>
+                   <option>Germany</option>
+                   <option>Namibia</option>
+                   <option>South Africa</option>
+                   <option>Zambia</option>
+                </select>
+          </td>
+        </tr>
+        <tr>
 	  <td> Access Level </td>
 	  <td> <select id="level">
 		 <option value="1">Administrator</option>
-		 <option value="2">Principal Investigator</option>
+		 <option value="2" SELECTED>Principal Investigator</option>
 	  </td>
 	</tr>
     </table>

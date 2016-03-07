@@ -13,6 +13,7 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>
 var location_url = "<?php echo $location_url ?>";
+var country = "<?php echo $_SESSION['country'] ?>";
 
 	function update_institutionlist() {
 	   switch($("#country").val()) {
@@ -63,13 +64,29 @@ var location_url = "<?php echo $location_url ?>";
 	   }
 	}
 
+	function setCurrency() {
+                switch ($("#country").val()) {
+                        case "Angola": $("#currency").val("AOA");       break;
+                        case "Botswana": $("#currency").val("BWP");     break;
+                        case "Namibia": $("#currency").val("NAD");      break;
+                        case "South Africa": $("#currency").val("ZAR"); break;
+                        case "Zambia": $("#currency").val("ZMW");       break;
+                        default: $("#currency").val("USD");
+                }
+	}
+
         $(document).ready(function(){
+
+		$("#country").val(country);
+		setCurrency();
 		update_institutionlist();
+
 		$("#country").change(function() {
 			update_institutionlist();
+			setCurrency();
 		});
 
-        	$("#owner").load("load_users.php?database=budget", function(){
+        	$("#owner").load("load_users.php?database=budget&country="+country, function(){
 			//do nothing?
 	        });
 
@@ -78,6 +95,7 @@ var location_url = "<?php echo $location_url ?>";
 		});
 
 		$("#save").click(function() { 
+			$("#save").prop("disabled", true);
                 	$.post("create_task.php",
                         {
 				database: "budget",
@@ -102,7 +120,10 @@ var location_url = "<?php echo $location_url ?>";
                                 } else {
                                         $("#submit_message").html("<span style=\"color:red\">"+data+"</span>");
                                 }
-                                setTimeout(function() {$("#submit_message").html("");}, 3000);
+                                setTimeout(function() {
+						$("#save").prop("disabled", false);
+						$("#submit_message").html("");
+					}, 3000);
                         });
 
 		});
@@ -188,11 +209,11 @@ var location_url = "<?php echo $location_url ?>";
 	  <td> 
     		<select  id="currency">
       		   <option  value="AOA">Angolan Kwanza (AOA)</option>
-      		   <option  value="BWP">Botswana Pula</option>
+      		   <option  value="BWP">Botswana Pula (BWP)</option>
       		   <option  value="NAD">Namibian Dollar (NAD)</option>
-      		   <option  value="USD">US Dollar</option>
-      		   <option  value="ZAR">South African Rand</option>
-      		   <option  value="ZMW">Zambian Kwacha</option>
+      		   <option  value="USD">US Dollar (USD)</option>
+      		   <option  value="ZAR">South African Rand (ZAR)</option>
+      		   <option  value="ZMW">Zambian Kwacha (ZMW)</option>
 		</select>
 	  </td>
 	</tr>

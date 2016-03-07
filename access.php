@@ -1,11 +1,13 @@
 <?php
 require_once("db.php");
 
+    $location_url = "https://budget.sasscal.org/"; // This is changed in 2 places. Here and in check_access.php
+
 $conn = getConnection();
 
-$redirect = array_key_exists("redirect",$_POST) ?  $_POST["redirect"] : "/budget/index.php";
+$redirect = array_key_exists("redirect",$_POST) ?  $_POST["redirect"] : "";
 if (empty($redirect)) {
-	$redirect = array_key_exists("redirect",$_GET) ?  $_GET["redirect"] : "/budget/index.php";
+	$redirect = array_key_exists("redirect",$_GET) ?  $_GET["redirect"] : "/index.php";
 }
 
 $username = array_key_exists("username",$_POST) ?  $_POST["username"] : "";
@@ -16,11 +18,10 @@ if (empty($username)) {
 
 $password = array_key_exists("password",$_POST) ?  $_POST["password"] : "";
 
-error_log("username = ".$username." and password = ".$password);
-
-$sql = "SELECT username, firstname, password, level FROM access WHERE username   = '".$username."' "; //AND password = '".$password."' ";
+$sql = "SELECT username, firstname, password, level, country FROM access WHERE username   = '".$username."' "; //AND password = '".$password."' ";
 
 $output = "";
+$country = "";
 $result = pg_query($conn, $sql);
 if ($result && (pg_num_rows($result) > 0)) {
         $row = pg_fetch_array($result); 
@@ -28,6 +29,7 @@ if ($result && (pg_num_rows($result) > 0)) {
 	        $output .= $row["level"];
 		$firstname = $row["firstname"];
 		$username = $row["username"];
+		$country = $row["country"];
 	} else {
 		$output .= "INCORRECT PASSWORD";
 	}
@@ -37,16 +39,20 @@ if ($result && (pg_num_rows($result) > 0)) {
 pg_close($conn);
 
 if (is_numeric($output)) {
+	error_log("Login OK: ".$username." | ".$password." \n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
 	//redirect to $redirect
 	session_start();
 	session_regenerate_id(true); 
 	$_SESSION['access'] = $output;
 	$_SESSION['username'] = $username;
 	$_SESSION['firstname'] = $firstname;
+	$_SESSION['country'] = $country;
 	header("Location: ".$location_url.$redirect);
 	#header("Location: https://budget.sasscal.org/".$redirect);
 	die();
 } else {
+
+	error_log("Login Failure: ".$username." | ".$password." \n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
 	//POST error back to login
 	$fields = array(
    	'error' => $output

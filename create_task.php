@@ -67,12 +67,14 @@ require_once("db.php");
 
 	$conn = getConnection();
 
-//error_log($sql);
 	$result = pg_query($conn, $sql);
         if ($result) {
                 echo "OK";
+		$details = "[taskid:".$taskid.", owner:".$owner. ", country:".$country. ", thematic_area:".$thematic_area. ", currency:".$currency.", start:Q".$firstquarter.", ".$firstyear.", description:'".$description."', institution:'".$institution."', budget: investments=".$investments_budget.", services=".$services_budget.", consumables=".$consumables_budget.", transport=".$transport_budget.", personnel=".$personnel_budget."]";
+                error_log($_SESSION['username'].": ADD TASK: ".$details."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
         } else {
                 echo pg_last_error($conn);
+		error_log($_SESSION['username'].": ADD TASK FAILED ".pg_last_error($conn)."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
         }
 
 	pg_close($conn);

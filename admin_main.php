@@ -189,7 +189,7 @@ function load_figures() {
 				$("#consumables_euro").html(roundToTwo(budget.consumables_actual / wxr ));
 				$("#transport_euro").html(roundToTwo(budget.transport_actual / wxr ));
 				$("#personnel_euro").html(roundToTwo(budget.personnel_actual / wxr ));
-				$("#admin_euro").html(roundToTwo(budget.admin / wxr ));
+				$("#admin_euro").html(roundToTwo(budget.admin / budget.xrate ));
 
 				$("#investments_available").html(roundToTwo(task.investments_budget - budget.cum_investments_euro - val($("#investments_euro"))));
 				$("#services_available").html(roundToTwo(task.services_budget - budget.cum_services_euro - val($("#services_euro"))));
@@ -237,7 +237,7 @@ function load_figures() {
 				$("#consumables_euro").html(roundToTwo(budget.consumables_actual / wxr ));
 				$("#transport_euro").html(roundToTwo(budget.transport_actual / wxr ));
 				$("#personnel_euro").html(roundToTwo(budget.personnel_actual / wxr ));
-				$("#admin_euro").html(roundToTwo(budget.admin / wxr ));
+				$("#admin_euro").html(roundToTwo(budget.admin / budget.xrate ));
 
 				$("#investments_available").html(roundToTwo(task.investments_budget - budget.cum_investments_euro));
 				$("#services_available").html(roundToTwo(task.services_budget - budget.cum_services_euro));
@@ -377,7 +377,6 @@ function go(direction) {
 	if (direction == "next") {
 		if ($("#quarters").prop("selectedIndex") < $("#quarters").prop("length") - 1) {
 				$("#quarters").prop("selectedIndex", $("#quarters").prop("selectedIndex") + 1);
-//alert("loading");
 				load_figures();
 			} else {
 				$("#years").prop("selectedIndex", $("#years").prop("selectedIndex") + 1);
@@ -389,7 +388,6 @@ function go(direction) {
 				load_quarters(4);
 			} else {
 				$("#quarters").prop("selectedIndex", $("#quarters").prop("selectedIndex") - 1);
-//alert("loading2");
 				load_figures();
 			}
 	}
@@ -504,8 +502,9 @@ background-color: #77EEFF;
 <body>
 <p  style="text-align: center;"><span  style="font-family: Helvetica,Arial,sans-serif; font-size: 30px;">Budget
 Tool</span></p>
-<p  style="text-align: center;"><span  style="font-family: Helvetica,Arial,sans-serif; font-size: 11px;">
+<p  style="text-align: center;">
    <!-- MENU --->
+    <span  style="font-family: Helvetica,Arial,sans-serif; font-size: 11px;">
 	<table border=0>
 	  <tr>
 	    <td style="text-align: left; font-size:11px">
@@ -521,7 +520,9 @@ Tool</span></p>
 	    </td>
 	  </tr>
 	</table>
-    </span></p>
+    </span>
+   <!-- ----- --->
+</p>
     <table style="text-align: left; margin-left: auto; margin-right: auto;"  border="1">
       <tbody>
         <tr>

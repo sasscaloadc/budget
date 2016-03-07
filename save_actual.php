@@ -64,20 +64,24 @@ require_once("db.php");
                                   ", admin = ".(empty($admin) ? "0" : $admin).
 	       (empty($status) ? "" : ", status = ".$status) .
                " WHERE task_id = ".$taskid." AND year = ".$year." AND quarter = ".$quarter;
-	if ($status == 3) {
-		$next_quarter = $quarter >= 4 ? 1 : $quarter + 1;
-		$next_year = $quarter >= 4 ? $year + 1 : $year;
-		$sql .= "; INSERT INTO budget (task_id, year, quarter, prev_unused, prev_xrate, status) ".
-                        "    VALUES (".$taskid.", ".$next_year.", ".$next_quarter.", ".$prev_unused.", ".$prev_xrate.", 1)";
-	}
+
+	//if ($status == 3) {  //THIS IS NOW TAKEN CARE OF BY THE DATABASE TRIGGER ON BUDGET UPDATE
+		//$next_quarter = $quarter >= 4 ? 1 : $quarter + 1;
+		//$next_year = $quarter >= 4 ? $year + 1 : $year;
+		//$sql .= "; INSERT INTO budget (task_id, year, quarter, prev_unused, prev_xrate, status) ".
+                        //"    VALUES (".$taskid.", ".$next_year.", ".$next_quarter.", ".$prev_unused.", ".$prev_xrate.", 1)";
+	//}
 
 	$conn = getConnection();
 
 	$result = pg_query($conn, $sql);
         if ($result) {
                 echo "OK";
+		$details = "[taskid:".$taskid.", year:".$year.", quarter:".$quarter.", status:".$status.", investments:".$investments.", personnel:".$personnel.", services:".$services.", consumables:".$consumables.", transport=".$transport.", admin:".$admin."]";
+		error_log($_SESSION['username'].": UPDATE ACTUALS: ".$details."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
         } else {
                 echo pg_last_error($conn);
+		error_log($_SESSION['username'].": UPDATE ACTUALS FAILED ".pg_last_error($conn)."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
         }
 
 	pg_close($conn);

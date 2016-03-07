@@ -12,10 +12,11 @@ require_once("load.php");
 class load_tasks extends load
 {
         public function get_sql() {
-		if ($_SESSION['access'] == 1) {
-	                return "Select to_char(id, '000') as id from task order by id";
-		} else {
-	                return "Select to_char(id, '000') as id from task where owner = '".$_SESSION['username']."' order by id";
+		switch($_SESSION['access']) {
+			case 0: return "SELECT to_char(id, '000') AS id FROM task ORDER BY id";
+			case 1: return "SELECT to_char(id, '000') AS id FROM task WHERE country = (SELECT country FROM access WHERE username = '".$_SESSION['username']."' ) ORDER BY id "; 
+			case 2: return "SELECT to_char(id, '000') AS id FROM task WHERE owner = '".$_SESSION['username']."' ORDER BY id";
+
 		}
         }
 
