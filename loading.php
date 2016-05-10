@@ -106,6 +106,20 @@ function load_quarters(qv) {
         load_figures();
 }
 
+function load_receive() {
+        $("#figures").hide();
+        $("#receive").show();
+        $("#submit_rec").prop("disabled",false);
+        $("#cancel").prop("disabled",false);
+        $("#submit_rec_message").html("");
+
+        $("#received_date").datepicker({ dateFormat: "yy-mm-dd" });
+
+        $("#received_local").val(budget.received > 0 ? budget.received : "");
+        $("#received_date").val(budget.received > 0 ? budget.received_date : "");
+        $("#received_xrate").val(budget.received > 0 ? budget.xrate : "");
+}
+
 function setNavigationButtons() {
         $("#previous").prop("disabled", true);
         $("#next").prop("disabled", true);
@@ -140,6 +154,9 @@ function go(direction) {
 
 function load_figures() {
         setNavigationButtons();
+
+	$("#receive").hide();
+	$("#figures").show();
 
 	year = $("#years").val();
 	quarter = $("#quarters").val();
@@ -221,8 +238,41 @@ function save_values() {
 		});
 }
 
+function save_receipts() {
+        $("#submit_rec").prop("disabled",true);
+        $("#cancel").prop("disabled",true);
+        $.post("save_receipts.php",
+                {
+                        database: "budget",
+                        taskid: $("#tasks").val(),
+                        year: $("#years").val(),
+                        quarter: $("#quarters").val(),
+                        received: $("#received_local").val().replace(/ /g, '').replace(/,/g, ''),
+                        received_date: $("#received_date").val(),
+                        xrate: $("#received_xrate").val(),
+                        status: 2
+                },
+                function(data, status){
+                        if (data == "OK") {
+                                $("#submit_rec_message").html("Saved");
+                        } else {
+                                $("#submit_rec_message").html("<span style=\"color:red\">"+data+"</span>");
+                        }
+                        setTimeout(load_figures, 3000);
+                });
+}
+
 $(document).ready(function(){
 	// LOAD
+	$("#record_receipt").click(function() { load_receive(); });
+        $("#cancel").click(function() {
+                        load_figures();
+                                });
+
+        $("#submit_rec").click(function() {
+                                        save_receipts();
+                                });
+
         $("#tasks").load("load_tasklist.php?database=budget", function(){
                 load_task();
             });
@@ -449,6 +499,9 @@ background-color: #77EEFF;
           <tr><td>&nbsp;</td>
 	      <td>&nbsp;</td>
               <td> 
+                  <span id="receive_button">
+                        <input id="record_receipt" type="button" value="Record Receipt" />
+                  </span>
 	          <span id="stat1_save">
 				  <input type="button" value="Save"   id="save_1">
 	          </span>
@@ -458,6 +511,20 @@ background-color: #77EEFF;
 	      </td>
           </tr>
     </table>
+    </span>
+    <span id="receive">
+    <table>
+       <tr><td></td><td> Received (Local Currency: <span id="local_received"></span>)</td><td>
+                                <input id="received_local" type="text"></td></tr>
+       <tr><td></td><td> Date Received </td><td> <input id="received_date" type="text"></td></tr>
+       <tr><td></td><td> Exchange Rate </td><td> <input id="received_xrate" type="text"></td></tr>
+       <tr><td></td><td></td><td> <input type="button" value="Submit" id="submit_rec">
+                                <input type="button" value="Cancel" id="cancel">
+                                <span id="submit_rec_message"></span>
+           </td></tr>
+    </table>
+    </span>
+
   </body>
 </html>
 

@@ -14,13 +14,13 @@ var location_url = "<?php echo $location_url ?>";
 
 		var d = new Date();	
 		switch(d.getMonth()) {
-			case 0: case 1: case 2: thisquarter = 1;
+			case 11: case 0: case 1: thisquarter = 1;
 				break; 
-			case 3: case 4: case 5: thisquarter = 2;
+			case 2: case 3: case 4: thisquarter = 2;
 				break; 
-			case 6: case 7: case 8: thisquarter = 3;
+			case 5: case 6: case 7: thisquarter = 3;
 				break; 
-			case 9: case 10: case 11: thisquarter = 4;
+			case 8: case 9: case 10: thisquarter = 4;
 				break; 
 		}
 		thisyear = d.getFullYear();
@@ -44,8 +44,16 @@ var location_url = "<?php echo $location_url ?>";
                         window.location.href = location_url+"report_cumulative.php?taskid="+$("#tasks").val().trim();
                 });
 
+                $("#expenditure_go").click(function() {
+                        window.location.href = location_url+"report_expenditure.php?taskid="+$("#tasks").val().trim();
+                });
+
                 $("#request_go").click(function() {
                         window.location.href = location_url+"report_request.php?taskid="+$("#tasks").val().trim()+"&year="+thisyear+"&quarter="+thisquarter;
+                });
+
+                $("#edit_go").click(function() {
+                        window.location.href = location_url+"edit_completion.php";
                 });
 
                 $("#cancel").click(function() {
@@ -131,9 +139,21 @@ var location_url = "<?php echo $location_url ?>";
 	  </td>
 	</tr>
         <tr>
+	  <td> Financials for A – Quick overview </td>
+	  <td> 
+	    <input type="button" id="expenditure_go" value="Go"/>
+	  </td>
+	</tr>
+        <tr>
 	  <td> Print Request for Payment </td>
 	  <td> 
 	    <input type="button" id="request_go" value="Go"/>
+	  </td>
+	</tr>
+        <tr>
+	  <td> Edit Task Completion </td>
+	  <td> 
+	    <input type="button" id="edit_go" value="Go"/>
 	  </td>
 	</tr>
     </table>

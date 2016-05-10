@@ -77,11 +77,11 @@ require_once("db.php");
 	$result = pg_query($conn, $sql);
         if ($result) {
                 echo "OK";
-		$details = "[taskid:".$taskid.", year:".$year.", quarter:".$quarter.", status:".$status.", investments:".$investments.", personnel:".$personnel.", services:".$services.", consumables:".$consumables.", transport=".$transport.", admin:".$admin."]";
-		error_log($_SESSION['username'].": UPDATE ACTUALS: ".$details."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
+		$details = "[taskid:".$taskid.", year:".$year.", quarter:".$quarter.", status:".$status.", investments:".$investments.", personnel:".$personnel.", services:".$services.", consumables:".$consumables.", transport:".$transport.", admin:".$admin."]";
+		err_log("UPDATE ACTUALS", $details);
         } else {
                 echo pg_last_error($conn);
-		error_log($_SESSION['username'].": UPDATE ACTUALS FAILED ".pg_last_error($conn)."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
+		err_log("UPDATE ACTUALS FAILED", pg_last_error($conn));
         }
 
 	pg_close($conn);

@@ -76,7 +76,10 @@ require_once("db.php");
 
 	$result = pg_query($conn, $sql);
         if ($result) {
-		// this would mean that the database trigger will have created the next quarter
+		$details = "[taskid:".$taskid.", year:".$year.", quarter:".$quarter.", status:".$status.", investments:".$investments.", personnel:".$personnel.", services:".$services.", consumables:".$consumables.", transport=".$transport."]";
+	        error_log($_SESSION['username'].": UPDATE ESTIMATES: ".$details."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
+
+		// this would also mean that the database trigger will have created the next quarter
 		$nexty = $quarter == 4 ? $year + 1 : $year;
 		$nextq = $quarter == 4 ? 1 : $quarter + 1;
 		$sql = " UPDATE budget SET investments_planned = ".(empty($investments_planned) ? "0" : $investments_planned).
@@ -89,11 +92,15 @@ require_once("db.php");
 		$result = pg_query($conn, $sql);
         	if ($result) {
                 	echo "OK";
+			$details = "[taskid:".$taskid.", year:".$nexty.", quarter:".$nextq.", status:".$status.", investments_planned:".$investments_planned.", personnel_planned:".$personnel_planned.", services_planned:".$services_planned.", consumables_planned:".$consumables_planned.", transport_planned=".$transport_planned."]";
+			err_log("UPDATE PLANNED", $details);
         	} else {
                 	echo pg_last_error($conn);
+			err_log("UPDATE PLANNED FAILED", pg_last_error($conn));
         	};
         } else {
                 echo pg_last_error($conn);
+		error_log($_SESSION['username'].": UPDATE ESTIMATES FAILED ".pg_last_error($conn)."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
         }
 
 	pg_close($conn);

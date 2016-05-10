@@ -25,4 +25,8 @@
                 return $conn;
         }
 
+	function err_log($update, $details) {
+		error_log(date('Y-m-d H:i:s').": ".$_SESSION['username'].": ".$update.": ".$details."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
+	}
+
 ?>

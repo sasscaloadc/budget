@@ -54,9 +54,10 @@ var country = "<?php echo $_SESSION['country'] ?>";
                 case "Zambia" :
                         $("#institutionlist").empty();
 			$("#institutionlist").append('<option value="University of Zambia">');
-			$("#institutionlist").append('<option value="Department of Forestry Zambia Meteorological Department">');
+			$("#institutionlist").append('<option value="Department of Forestry">'); 
+			$("#institutionlist").append('<option value="Zambia Meteorological Department">');
 			$("#institutionlist").append('<option value="Community Based Natural Resource Management">');
-			$("#institutionlist").append('<option value="National Resource Sensing Centre (Zambia)">');
+			$("#institutionlist").append('<option value="National Remote Sensing Centre (Zambia)">');
 			$("#institutionlist").append('<option value="Zambia Wildlife Authority">');
 			$("#institutionlist").append('<option value="Mulungushi University">');
 			$("#institutionlist").append('<option value="Zambia Agriculture Research Institute">');

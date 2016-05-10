@@ -88,7 +88,7 @@ function update_totals() {
 	$("#services_available").html( money(task.services_budget - budget.cum_services_euro - toEuro($("#services_local").val() - budget.cum_services, budget)) );
 	$("#transport_euro").html( money(eval(budget.cum_transport_euro) + toEuro($("#transport_local").val() - budget.cum_transport, budget)) );
 	$("#transport_available").html( money(task.transport_budget - budget.cum_transport_euro - toEuro($("#transport_local").val() - budget.cum_transport, budget)) );
-	$("#admin_euro").html( money(eval(budget.cum_admin_euro) + toEuro($("#admin_local").val() - budget.cum_admin, budget)) );
+	$("#admin_euro").html( money(eval(budget.cum_admin_euro) + (($("#admin_local").val() - budget.cum_admin) / budget.xrate)) );
 	$("#admin_available").html( money(task.admin_budget - budget.cum_admin_euro - toEuro($("#admin_local").val() - budget.cum_admin, budget)) );
 
 	tot_local = eval($("#personnel_local").val()) + eval($("#investments_local").val()) + eval($("#consumables_local").val()) + eval($("#services_local").val())

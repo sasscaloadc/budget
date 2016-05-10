@@ -1,4 +1,5 @@
 <?php
+require_once("db.php");
 
     $location_url = "https://budget.sasscal.org/"; // This is changed in 2 places. Here and in access.php
 

@@ -35,10 +35,10 @@ require_once("db.php");
         if ($result) {
                 echo "OK";
 		$details = "[username:".$username.", password:".$password. ", level:".$level.", country:".$country. ", firstname:".$firstname. ", lastname:".$lastname. "]";
-		error_log($_SESSION['username'].": ADD USER ".$details."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
+		err_log("ADD USER", $details);
         } else {
                 echo pg_last_error($conn);
-		error_log($_SESSION['username'].": ADD USER FAILED ".pg_last_error($conn)."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
+		err_log("ADD USER FAILED", pg_last_error($conn));
         }
 
 	pg_close($conn);

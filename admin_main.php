@@ -427,6 +427,10 @@ $(document).ready(function(){
 			window.location.href = location_url+"add_task.php";
 				}); 
 
+	$("#edittask").click(function() { 
+			window.location.href = location_url+"edit_task_numbers.php";
+				}); 
+
 	$("#reports").click(function() { 
 			window.location.href = location_url+"reports.php";
 				}); 
@@ -515,6 +519,7 @@ Tool</span></p>
 	    <td style="text-align: right">
                 <input type="button" id="adduser" value="Add User"/>
                 <input type="button" id="addtask" value="Add Task"/>
+                <input type="button" id="edittask" value="Edit Task"/>
                 <input type="button" id="reports" value="Reports"/>
                 <input type="button" id="logout" value="Log Out"/>
 	    </td>

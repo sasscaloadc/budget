@@ -39,7 +39,7 @@ if ($result && (pg_num_rows($result) > 0)) {
 pg_close($conn);
 
 if (is_numeric($output)) {
-	error_log("Login OK: ".$username." | ".$password." \n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
+	err_log("LOGIN OK", $username." | ".$password);
 	//redirect to $redirect
 	session_start();
 	session_regenerate_id(true); 
@@ -51,8 +51,7 @@ if (is_numeric($output)) {
 	#header("Location: https://budget.sasscal.org/".$redirect);
 	die();
 } else {
-
-	error_log("Login Failure: ".$username." | ".$password." \n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
+	err_log("LOGIN FAILED", $username." | ".$password);
 	//POST error back to login
 	$fields = array(
    	'error' => $output

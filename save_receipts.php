@@ -41,14 +41,16 @@ require_once("db.php");
 	       		(empty($status) ? "" : ", status = ".$status) .
                " WHERE task_id = ".$taskid." AND year = ".$year." AND quarter = ".$quarter;
 
-//error_log($sql);
 	$conn = getConnection();
 
 	$result = pg_query($conn, $sql);
         if ($result) {
                 echo "OK";
+                $details = "[taskid:".$taskid.", year:".$year.", quarter:".$quarter.", received:".$received.", received_date:".$received_date.", xrate:".$xrate.", status:".$status."]";
+		err_log("UPDATE RECEIPTS", $details);
         } else {
                 echo pg_last_error($conn);
+		err_log("UPDATE RECEIPTS FAILED", pg_last_error($conn));
         }
 
 	pg_close($conn);

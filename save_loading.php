@@ -56,9 +56,10 @@ require_once("db.php");
         if ($result) {
                	echo "OK";
 		$details = "[taskid:".$taskid.", year:".$year.", quarter:".$quarter.", status:".$status.", investments:".$investments.", personnel:".$personnel.", services:".$services.", consumables:".$consumables.", transport=".$transport.", investments_actual:".$investments_actual.", personnel_actual:".$personnel_actual.", services_actual:".$services_actual.", consumables_actual:".$consumables_actual.", transport_actual:".$transport_actual.", admin:".$admin.", investments_planned:".$investments_planned.", personnel_planned:".$personnel_planned.", services_planned:".$services_planned.", consumables_planned:".$consumables_planned.", transport_planned:".$transport_planned."]";
-                error_log($_SESSION['username'].": UPDATE LOADING: ".$details."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
+		err_log("UPDATE LOADING", $details);
         } else {
                 echo pg_last_error($conn);
+		err_log("UPDATE LOADING FAILED", pg_last_error($conn));
         }
 
 	pg_close($conn);

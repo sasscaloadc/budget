@@ -12,12 +12,11 @@ include 'check_access.php';
 
 	$sql = "";
 	if ($_SESSION['access'] <= 1) {
-                $sql = "SELECT year FROM budget WHERE task_id = ".$taskid." AND status >= 3 GROUP BY year ORDER BY year ";
+                $sql = "SELECT year FROM budget WHERE task_id = ".$taskid." GROUP BY year ORDER BY year ";
 	} else {
                 $sql = "SELECT year FROM budget b INNER JOIN task t on b.task_id = t.id 
 			WHERE task_id = ".$taskid." 
 			  AND owner = '".$_SESSION['username']."'
-			  AND status >= 3 
 			GROUP BY year
 			ORDER BY year ";
 	}

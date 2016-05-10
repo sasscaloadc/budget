@@ -40,12 +40,22 @@ var location_url = "<?php echo $location_url ?>";
                             $("#quarter").load("load_quarters.php?taskid="+$("#quarterly").val().trim()+"&year="+$("#year").val().trim());
                 });
 
+	        $("#quarterly_f").load("load_tasklist.php?database=budget");
+
                 $("#cumulative_go").click(function() {
                         window.location.href = location_url+"report_cumulative.php?taskid="+$("#cumulative").val().trim();
                 });
 
                 $("#quarterly_go").click(function() {
                         window.location.href = location_url+"report_quarterly.php?taskid="+$("#quarterly").val().trim()+"&year="+$("#year").val().trim()+"&quarter="+$("#quarter").val().trim();
+                });
+
+                $("#financial_go").click(function() {
+                        window.location.href = location_url+"report_expenditure.php?taskid="+$("#quarterly_f").val().trim();
+                });
+
+                $("#financialc_go").click(function() {
+                        window.location.href = location_url+"report_expenditure.php?country="+$("#country").val().trim();
                 });
 
                 $("#cancel").click(function() {
@@ -97,6 +107,29 @@ var location_url = "<?php echo $location_url ?>";
             <select id="cumulative">
                  <option>Loading ...</option>
             </select><input type="button" id="cumulative_go" value="Go"/>
+	  </td>
+	</tr>
+        <tr>
+	  <td> Financials for A – Quick overview </td>
+	  <td> 
+            <select id="quarterly_f">
+                 <option>Loading ...</option>
+            </select>
+	    <input type="button" id="financial_go" value="Go"/> (By Task)
+	  </td>
+	</tr>
+        <tr>
+	  <td> Financials for A – Quick overview </td>
+	  <td> 
+            <select id="country">
+                   <option>Angola</option>
+                   <option>Botswana</option>
+                   <option>Germany</option>
+                   <option>Namibia</option>
+                   <option>South Africa</option>
+                   <option>Zambia</option>
+            </select>
+	    <input type="button" id="financialc_go" value="Go"/> (By Country)
 	  </td>
 	</tr>
         <tr>
