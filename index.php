@@ -12,7 +12,7 @@
 <script>
 $.ajaxSetup({cache: false}); // This is to prevent caching in IE
 
-var access = <?php echo $_SESSION['access'] ?>;
+var access = <?php echo array_key_exists('access', $_SESSION) ? $_SESSION['access'] : 'NOT DEFINED' ?>;
 var location_url = "<?php echo $location_url ?>";
 
 if (access <= 1) {

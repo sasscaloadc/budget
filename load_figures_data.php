@@ -50,7 +50,6 @@ class load_figures_data extends load
 
                        " WHERE b.task_id = ".$taskid." AND b.year = ".$year." AND b.quarter = ".$quarter;
 
-//error_log($sql);
 		return $sql;
         }
 

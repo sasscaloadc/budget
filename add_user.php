@@ -32,11 +32,10 @@ var country = "<?php echo $_SESSION['country'] ?>";
                         {
 				database: "budget",
                                 username: $("#username").val(),
-                                password: $("#password").val(),
                                 firstname: $("#firstname").val(),
                                 lastname: $("#lastname").val(),
                                 country: $("#country").val(),
-                                level: $("#level").val(),
+                                level: 2
                         },
                         function(data, status){
 				var saved = false;
@@ -93,16 +92,6 @@ body {
 	  </td>
 	</tr>
         <tr>
-	  <td> Password </td>
-	  <td> <input type="password" id="password"/>
-	  </td>
-	</tr>
-        <tr>
-	  <td> Retype Password </td>
-	  <td> <input type="password" id="verify_password"/>
-	  </td>
-	</tr>
-        <tr>
 	  <td> First Name </td>
 	  <td> <input type="text" id="firstname"/>
 	  </td>
@@ -125,13 +114,6 @@ body {
                 </select>
           </td>
         </tr>
-        <tr>
-	  <td> Access Level </td>
-	  <td> <select id="level">
-		 <option value="1">Administrator</option>
-		 <option value="2" SELECTED>Principal Investigator</option>
-	  </td>
-	</tr>
     </table>
     </p>
     <p>

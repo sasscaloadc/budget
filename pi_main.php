@@ -9,6 +9,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>
 var location_url = "<?php echo $location_url ?>";
+var keys = JSON.parse(' { "taskid" : "?", "year" : "?", "quarter" : "?" } ');    // these are the last chosen values for task, year and quarter.
+
+	function setsessionvar(key, value, callback) {
+        	$.post("sessionvalues.php", { 'key' : key, 'value' : value }, function(data) {
+                	keys = JSON.parse(data);
+			if (callback) callback();
+        	});
+	}
 
         $(document).ready(function(){
 
@@ -22,7 +30,8 @@ var location_url = "<?php echo $location_url ?>";
 				break; 
 			case 8: case 9: case 10: thisquarter = 4;
 				break; 
-		}
+		} // NOTE: reporting switches to next quarter in the last month of the current quarter. This has bearing on the update_budget() trigger in the database.
+
 		thisyear = d.getFullYear();
 		nextq = thisquarter < 4 ? thisquarter + 1 : 1;
 		previousq = thisquarter > 1 ? thisquarter - 1 : 4;
@@ -60,7 +69,16 @@ var location_url = "<?php echo $location_url ?>";
                         window.location.href = location_url+"index.php";
                 });
 		
-        	$("#tasks").load("load_tasklist.php?database=budget");
+        	$("#tasks").load("load_tasklist.php?database=budget", function() {
+			setsessionvar('reload', 'ok',  // this is just to load the values into global variable "keys"
+					function() {   //callback
+						$("select#tasks option").each(function() { this.selected = (this.value.trim() == keys.taskid.trim()); });
+					});
+		});
+
+		$("#tasks").change(function() {
+			setsessionvar('taskid', $("#tasks").val().trim());
+		});
 
 	        $("#logout").click(function() {
                         window.location.href = location_url+"logout.php";

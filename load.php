@@ -23,12 +23,13 @@ abstract class load {
                 $database = array_key_exists("database",$_GET) ?  $_GET["database"] : "";
                 if (empty($database)) {
                         $database = array_key_exists("database",$_POST) ?  $_POST["database"] : "";
+                	if (empty($database)) die("No database name supplied");
                 }
                 load::$dbname = $database;
 
                 // Create connection
                 //$conn = pg_pconnect("host=".load::$servername." user=".load::$username." password=".load::$password);
-                $conn = pg_pconnect("host=".load::$servername." dbname=".load::$dbname." user=".load::$username." password=".load::$password);
+                $conn = pg_pconnect("host=".load::$DBservername." dbname=".load::$dbname." user=".load::$username." password=".load::$password);
                 if (!$conn) {
                         die("Database connection failed. ");
                 }

@@ -2,6 +2,7 @@
 /*
  */
  
+    $location_url = "https://budget.sasscal.org/"; 
 
         function getConnection() {
 		$servername = "afrihost.sasscal.org";
@@ -25,8 +26,18 @@
                 return $conn;
         }
 
-	function err_log($update, $details) {
-		error_log(date('Y-m-d H:i:s').": ".$_SESSION['username'].": ".$update.": ".$details."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
-	}
+
+    function err_log($update, $details) {
+        $username = isset ($_SESSION) ? (array_key_exists('username', $_SESSION) ? $_SESSION['username'] : 'undefined') : 'not_in_session';
+
+	$conn = getConnection();
+
+	$sql = "INSERT INTO error_log (t_stamp, username, update_message, details) VALUES ('".date('Y-m-d H:i:s')."', '".$username."', '".$update."', '".$details."')";
+	
+	pg_query($conn, $sql);
+
+        error_log(date('Y-m-d H:i:s').": ".$username.": ".$update.": ".$details."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
+
+    }
 
 ?>

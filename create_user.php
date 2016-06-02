@@ -6,18 +6,26 @@ require_once("db.php");
         $firstname = array_key_exists("firstname",$_GET) ?  $_GET["firstname"] : "";
         if (empty($firstname)) {
                 $firstname = array_key_exists("firstname",$_POST) ?  $_POST["firstname"] : "";
+		if (empty($username)) {
+			echo "Please enter a First Name";
+			die();
+		}
         }
         $lastname = array_key_exists("lastname",$_GET) ?  $_GET["lastname"] : "";
         if (empty($lastname)) {
                 $lastname = array_key_exists("lastname",$_POST) ?  $_POST["lastname"] : "";
+		if (empty($username)) {
+			echo "Please enter a Last Name";
+			die();
+		}
         }
         $username = array_key_exists("username",$_GET) ?  $_GET["username"] : "";
         if (empty($username)) {
                 $username = array_key_exists("username",$_POST) ?  $_POST["username"] : "";
-        }
-        $password = array_key_exists("password",$_GET) ?  $_GET["password"] : "";
-        if (empty($password)) {
-                $password = array_key_exists("password",$_POST) ?  $_POST["password"] : "";
+		if (empty($username)) {
+			echo "Please enter a username";
+			die();
+		}
         }
         $country = array_key_exists("country",$_GET) ?  $_GET["country"] : "";
         if (empty($country)) {
@@ -27,7 +35,7 @@ require_once("db.php");
         if (empty($level)) {
                 $level = array_key_exists("level",$_POST) ?  $_POST["level"] : "";
         }
-	$sql = " INSERT INTO access (username, password, level, country, firstname, lastname) VALUES ('".$username."', '".$password. "', ".$level.", '".$country. "', '".$firstname. "', '".$lastname. "' )";
+	$sql = " INSERT INTO access (username, password, level, country, firstname, lastname) VALUES ('".$username."', '', ".$level.", '".$country. "', '".$firstname. "', '".$lastname. "' )";
 
 	$conn = getConnection();
 

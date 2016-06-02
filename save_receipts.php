@@ -35,6 +35,13 @@ require_once("db.php");
         if (empty($xrate)) {
                 $xrate = array_key_exists("xrate",$_POST) ?  $_POST["xrate"] : "";
         }
+
+	if ($received < 0) {
+		echo "Received amount cannot be negative";
+		err_log("UPDATE RECEIPTS FAILED", "Attempting to add negative receipt of ".$received." to task ".$taskid);
+		return;
+	}
+
 	$sql = " UPDATE budget SET received = ".$received.
                                   ", received_date = '".$received_date."' ".
                                   ", xrate = ".$xrate.

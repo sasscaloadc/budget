@@ -1,8 +1,6 @@
 <?php
 require_once("db.php");
 
-    $location_url = "https://budget.sasscal.org/"; // This is changed in 2 places. Here and in access.php
-
     session_cache_expire( 20 );
     session_start(); // NEVER FORGET TO START THE SESSION!!!
     $inactive = 1200;
@@ -14,9 +12,10 @@ require_once("db.php");
     }
     $_SESSION['start'] = time();
  
-
-    if (!is_numeric($_SESSION['access'])) {
-          header("Location: ".$location_url."login.php?redirect=".urlencode($_SERVER['PHP_SELF']));
+    $access = array_key_exists('access', $_SESSION) ? $_SESSION['access'] : 'NOT DEFINED';
+    
+    if (!is_numeric($access)) {
+          header("Location: ".$location_url."login.php?redirect=".urlencode($_SERVER['PHP_SELF'].'?'.$_SERVER['QUERY_STRING']));
     }
 
 ?>

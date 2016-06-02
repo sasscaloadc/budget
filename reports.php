@@ -9,6 +9,14 @@
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
     <script>
 var location_url = "<?php echo $location_url ?>";
+var keys = JSON.parse(' { "taskid" : "?", "year" : "?", "quarter" : "?" } ');    // these are the last chosen values for task, year and quarter.
+
+        function setsessionvar(key, value, callback) {
+                $.post("sessionvalues.php", { 'key' : key, 'value' : value }, function(data) {
+                        keys = JSON.parse(data);
+                        if (callback) callback();
+                });
+        }
 
         $(document).ready(function(){
 
@@ -21,26 +29,62 @@ var location_url = "<?php echo $location_url ?>";
                 });
 
         	$("#cumulative").load("load_tasklist.php?database=budget", function(){
-			//
+                        setsessionvar('reload', 'ok',  // this is just to load the values into global variable "keys"
+                                 function() {   //callback
+                                     $("select#cumulative option").each(function() { this.selected = (this.value.trim() == keys.taskid.trim()); });
+                                 });
             	});
 
 	        $("#quarterly").load("load_tasklist.php?database=budget", function(){
-			$("#year").load("load_years.php?taskid="+$("#quarterly").val().trim(), function() {
-				$("#quarter").load("load_quarters.php?taskid="+$("#quarterly").val().trim()+"&year="+$("#year").val().trim());
-			});	
+                   setsessionvar('reload', 'ok',  // this is just to load the values into global variable "keys"
+                      function() {   //callback
+                         $("select#quarterly option").each(function() { this.selected = (this.value.trim() == keys.taskid.trim()); });
+		         $("#year").load("load_years.php?taskid="+$("#quarterly").val().trim(), function() {
+                            $("select#year option").each(function() { this.selected = (this.value.trim() == keys.year.trim()); });
+			    $("#quarter").load("load_quarters.php?taskid="+$("#quarterly").val().trim()+"&year="+$("#year").val().trim(), function() {
+				$("select#quarter option").each(function() { this.selected = (this.value.trim() == keys.quarter.trim()); });
+			    });
+			 });
+		      });	
             	});
 
 	        $("#quarterly").change(function(){
+                    setsessionvar('taskid', $("#quarterly").val().trim(), function () {
 			$("#year").load("load_years.php?taskid="+$("#quarterly").val().trim(), function() {
-				$("#quarter").load("load_quarters.php?taskid="+$("#quarterly").val().trim()+"&year="+$("#year").val().trim());
+                            $("select#year option").each(function() { this.selected = (this.value.trim() == keys.year.trim()); });
+			    $("#quarter").load("load_quarters.php?taskid="+$("#quarterly").val().trim()+"&year="+$("#year").val().trim(), function() {
+                                $("select#quarter option").each(function() { this.selected = (this.value.trim() == keys.quarter.trim()); });
+                            });
 			});	
+                    });
 		});
 
 		$("#year").change(function() {
-                            $("#quarter").load("load_quarters.php?taskid="+$("#quarterly").val().trim()+"&year="+$("#year").val().trim());
+                    setsessionvar('year', $("#year").val().trim(), function() {
+                        $("#quarter").load("load_quarters.php?taskid="+$("#quarterly").val().trim()+"&year="+$("#year").val().trim(), function() {
+                           $("select#quarter option").each(function() { this.selected = (this.value.trim() == keys.quarter.trim()); });
+		        });
+                    });
                 });
 
-	        $("#quarterly_f").load("load_tasklist.php?database=budget");
+                $("#quarter").change(function(){
+                    setsessionvar('quarter', $("#quarter").val().trim());
+                });
+
+	        $("#cumulative").change(function() {
+                        setsessionvar('taskid', $("#cumulative").val().trim());
+		});
+
+	        $("#quarterly_f").change(function() {
+                        setsessionvar('taskid', $("#quarterly_f").val().trim());
+		});
+
+	        $("#quarterly_f").load("load_tasklist.php?database=budget", function() {
+                        setsessionvar('reload', 'ok',  // this is just to load the values into global variable "keys"
+                                 function() {   //callback
+                                     $("select#quarterly_f option").each(function() { this.selected = (this.value.trim() == keys.taskid.trim()); });
+                                 });
+		});
 
                 $("#cumulative_go").click(function() {
                         window.location.href = location_url+"report_cumulative.php?taskid="+$("#cumulative").val().trim();
@@ -62,6 +106,7 @@ var location_url = "<?php echo $location_url ?>";
                         window.location.href = location_url+"index.php";
                 });
 
+		$("select#country option").each(function() { this.selected = (this.value.trim() == '<?php echo isset($_SESSION['country']) ? $_SESSION['country'] : '' ?>'); })
         });
     </script>
     <style  type="text/css">

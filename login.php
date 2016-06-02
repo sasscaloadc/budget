@@ -44,10 +44,10 @@
 	</tr>
         <tr>
 	  <td colspan="2"> </td>
-	  <td><?php echo $_POST["error"] ?></td>
+	  <td><?php echo array_key_exists('error', $_POST) ? $_POST['error'] : '' ?></td>
 	</tr>
     </table>
-    <input type="hidden" name="redirect" value="<?php echo empty($_GET['redirect']) ? $_POST['redirect'] : $_GET['redirect'] ?>"/>
+    <input type="hidden" name="redirect" value="<?php echo  array_key_exists('redirect', $_GET) ? $_GET['redirect'] : (array_key_exists('redirect', $_POST) ? $_POST['redirect'] : '') ?>"/>
    </form>
   </div>
   </body>

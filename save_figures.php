@@ -76,8 +76,8 @@ require_once("db.php");
 
 	$result = pg_query($conn, $sql);
         if ($result) {
-		$details = "[taskid:".$taskid.", year:".$year.", quarter:".$quarter.", status:".$status.", investments:".$investments.", personnel:".$personnel.", services:".$services.", consumables:".$consumables.", transport=".$transport."]";
-	        error_log($_SESSION['username'].": UPDATE ESTIMATES: ".$details."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
+		$details = "[taskid:".$taskid.", year:".$year.", quarter:".$quarter.", status:".$status.", investments:".$investments.", personnel:".$personnel.", services:".$services.", consumables:".$consumables.", transport:".$transport."]";
+	        err_log("UPDATE ESTIMATES: ", $details);
 
 		// this would also mean that the database trigger will have created the next quarter
 		$nexty = $quarter == 4 ? $year + 1 : $year;
@@ -92,7 +92,7 @@ require_once("db.php");
 		$result = pg_query($conn, $sql);
         	if ($result) {
                 	echo "OK";
-			$details = "[taskid:".$taskid.", year:".$nexty.", quarter:".$nextq.", status:".$status.", investments_planned:".$investments_planned.", personnel_planned:".$personnel_planned.", services_planned:".$services_planned.", consumables_planned:".$consumables_planned.", transport_planned=".$transport_planned."]";
+			$details = "[taskid:".$taskid.", year:".$nexty.", quarter:".$nextq.", status:".$status.", investments_planned:".$investments_planned.", personnel_planned:".$personnel_planned.", services_planned:".$services_planned.", consumables_planned:".$consumables_planned.", transport_planned:".$transport_planned."]";
 			err_log("UPDATE PLANNED", $details);
         	} else {
                 	echo pg_last_error($conn);
@@ -100,7 +100,7 @@ require_once("db.php");
         	};
         } else {
                 echo pg_last_error($conn);
-		error_log($_SESSION['username'].": UPDATE ESTIMATES FAILED ".pg_last_error($conn)."\n", 3, "/var/www/sasscal_secure/budget_tool/logs/audit.log");
+		err_log("UPDATE ESTIMATES FAILED ", pg_last_error($conn));
         }
 
 	pg_close($conn);

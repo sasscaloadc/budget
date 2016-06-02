@@ -1,5 +1,9 @@
 <?php
-	include 'check_access.php'
+	include 'check_access.php';
+
+if ($_SESSION['access'] > 1)  {
+        header("Location: ".$location_url."no_access.php");
+}
 ?>
 <!DOCTYPE html>
 <html>
@@ -17,6 +21,7 @@ var task;
 var wxr = 1;
 var budgetyears;
 var budgetquarters;
+var keys = JSON.parse(' { "taskid" : "?", "year" : "?", "quarter" : "?" } ');    // these are the last chosen values for task, year and quarter.
 
 function money(n) {
 	var decPlaces = 2,
@@ -264,7 +269,8 @@ function load_quarters(qv) {
 			break;
 		}
 	}
-	$("select#quarters option").each(function() { this.selected = (this.value == qv); });
+	$("select#quarters option").each(function() { this.selected = (this.value.trim() == qv.trim()); }); 
+	$.post("sessionvalues.php", { 'key' : 'quarter', 'value' : $("#quarters").val().trim() });  // in case there is no quarter "qv" loaded.
 	load_figures();
 }
 
@@ -275,25 +281,31 @@ function load_years(y, q) {
 	}
 	$("#years").html(html);
 	$("select#years option").each(function() { this.selected = (this.value == y); });
+	$.post("sessionvalues.php", { 'key' : 'year', 'value' : $("#years").val().trim() }); // in case there is not year "y" in the loaded list
 	load_quarters(q);
 }
 
 function load_task(y, q) {
-	$.get("load_task.php?database=budget&taskid="+ $("#tasks").val().trim(), function(data, status){
-			task = JSON.parse(data);
-			load_years(y, q);
-			$("#taskcurrency").html(task.currency);
-			$(".curr").html(task.currency+" ");
-			$(".eur").html("&euro; ");
-			$("#taskbudget").html(roundToTwo(task.budget));
-			$("#investments_budget").html(roundToTwo(task.investments_budget));
-			$("#services_budget").html(roundToTwo(task.services_budget));
-			$("#consumables_budget").html(roundToTwo(task.consumables_budget));
-			$("#transport_budget").html(roundToTwo(task.transport_budget));
-			$("#personnel_budget").html(roundToTwo(task.personnel_budget));
-			$("#localxrate").html(task.localxrate);
-			$("#xratedescription").html("Current Local Exchange Rate<small>("+task.localxrateupdated+")</small>");
-			$("#local_received").html(task.currency);
+	setsessionvar('reload', 'ok',  // this is just to load the values into global variable "keys"
+                 function () { //callback
+			$("select#tasks option").each(function() { this.selected = (this.value.trim() == keys.taskid.trim()); });
+
+			$.get("load_task.php?database=budget&taskid="+ $("#tasks").val().trim(), function(data, status){
+					task = JSON.parse(data);
+					load_years(keys.year.trim(), keys.quarter.trim());
+					$("#taskcurrency").html(task.currency);
+					$(".curr").html(task.currency+" ");
+					$(".eur").html("&euro; ");
+					$("#taskbudget").html(roundToTwo(task.budget));
+					$("#investments_budget").html(roundToTwo(task.investments_budget));
+					$("#services_budget").html(roundToTwo(task.services_budget));
+					$("#consumables_budget").html(roundToTwo(task.consumables_budget));
+					$("#transport_budget").html(roundToTwo(task.transport_budget));
+					$("#personnel_budget").html(roundToTwo(task.personnel_budget));
+					$("#localxrate").html(task.localxrate);
+					$("#xratedescription").html("Current Local Exchange Rate<small>("+task.localxrateupdated+")</small>");
+					$("#local_received").html(task.currency);
+				});
 		});
 }
 
@@ -365,10 +377,14 @@ function save_receipts() {
 		function(data, status){
 			if (data == "OK") {
 				$("#submit_rec_message").html("Saved");
+				setTimeout(load_figures, 3000);
 			} else {
 				$("#submit_rec_message").html("<span style=\"color:red\">"+data+"</span>");
+				setTimeout( function () { $("#submit_rec_message").html("");
+							  $("#submit_rec").prop("disabled",false);
+							  $("#cancel").prop("disabled",false);
+							} , 3000);
 			}
-			setTimeout(load_figures, 3000);
 		});
 }
 
@@ -393,6 +409,13 @@ function go(direction) {
 	}
 };
 
+function setsessionvar(key, value, callback) {
+	$.post("sessionvalues.php", { 'key' : key, 'value' : value }, function(data) {
+		keys = JSON.parse(data);
+		if (callback) callback();
+	});
+};
+
 $(document).ready(function(){
 	// LOAD
 	$("#tasks").load("load_tasklist.php?database=budget", function(){
@@ -400,15 +423,21 @@ $(document).ready(function(){
 	    });
 
 	$("#tasks").change(function() {
-			load_task();
+				setsessionvar('taskid', $("#tasks").val().trim(), function() {
+					load_task() 
+				});
 			});
 
 	$("#years").change(function() {
-			load_quarters();
+				setsessionvar('year', $("#years").val().trim(), function () {
+					load_quarters(keys.quarter.trim()) 
+				});  
 			});
 
 	$("#quarters").change(function() {
-			load_figures();
+				setsessionvar('quarter', $("#quarters").val().trim(), function() {
+					load_figures() 
+				});
 			});
 
 	$("#submit_rec").click(function() { 

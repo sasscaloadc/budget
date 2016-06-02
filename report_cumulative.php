@@ -226,7 +226,7 @@ table.task_table td {
 	  </tr>
 	</table>
         <br/>
-        <input type="button" id="cancel" value="< Back" onclick="window.location.href = '<?php echo $location_url."pi_main.php" ?>'" />
+        <input type="button" id="cancel" value="< Back" onclick="window.location.href = '<?php echo $location_url."index.php" ?>'" />
 
    </div>
   </body>

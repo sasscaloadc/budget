@@ -10,6 +10,14 @@
     <script>
 var location_url = "<?php echo $location_url ?>";
 var original;
+var keys = JSON.parse(' { "taskid" : "?", "year" : "?", "quarter" : "?" } ');    // these are the last chosen values for task, year and quarter.
+
+	function setsessionvar(key, value, callback) {
+        	$.post("sessionvalues.php", { 'key' : key, 'value' : value }, function(data) {
+                	keys = JSON.parse(data);
+                	if (callback) callback();
+        	});
+	};
 
 	function load_completion() {
 
@@ -27,15 +35,21 @@ var original;
 
 
                 $("#cancel").click(function() {
-                        window.location.href = location_url+"index.php";
+                        window.location.href = location_url+"pi_main.php";
                 });
 		
-        	$("#tasks").load("load_tasklist.php?database=budget", function() { 
-			load_completion(); 
-		});
+                $("#tasks").load("load_tasklist.php?database=budget", function() {
+                        setsessionvar('reload', 'ok',  // this is just to load the values into global variable "keys"
+                                        function() {   //callback
+                                                $("select#tasks option").each(function() { this.selected = (this.value.trim() == keys.taskid.trim()); });
+						load_completion();
+                                        });
+                });
 
-		$("#tasks").change(function() { load_completion(); });
-		
+                $("#tasks").change(function() {
+                        setsessionvar('taskid', $("#tasks").val().trim(), load_completion);
+                });
+
                 $("#save").click(function() {
 
                         $("#save").prop("disabled", true);
