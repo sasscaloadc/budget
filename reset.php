@@ -24,7 +24,7 @@ require_once("db.php");
 		die();
 	}
 
-	$pass_hash = substr(crypt($password, '$2y$09$xfr1kroEG5R0gdfGd5dfg4$'), 29);
+	$pass_hash = substr(crypt($password, '$2y$09$'.$pw_salt.'$'), 29);
 
 	$sql = " UPDATE access set password = '".$pass_hash."' "
                ."WHERE username = '".$username."' RETURNING level, firstname, country";

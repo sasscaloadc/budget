@@ -2,13 +2,22 @@
 /*
  */
  
-    $location_url = "https://budget.sasscal.org/"; 
+    $all_settings = parse_ini_file("/etc/sasscal/locker.ini",true);
+
+    $settings = $all_settings['budget'];
+
+    $db_name = $settings['dbname'];
+    $db_username = $settings['username'];
+    $pw_salt = $settings['pw_salt'];
+    $db_password = $settings['dbpassword'];
+    $location_url = $settings['location_url'];
+    $servername = $settings['servername'];
 
         function getConnection() {
-		$servername = "afrihost.sasscal.org";
-		$username = "postgres";
-		$password = "5455c4l_";
-		$dbname = "budget";
+		global $servername;
+		global $db_username;
+		global $db_name;
+		global $db_password;
 
                 $database = array_key_exists("database",$_GET) ?  $_GET["database"] : "";
                 if (empty($database)) {
@@ -16,11 +25,15 @@
                 }
                 if (!empty($database)) {
 			$dbname = $database;
+		} else {
+			$dbname = $db_name;
 		}
 
                 // Create connection
-                $conn = pg_pconnect("host=".$servername." dbname=".$dbname." user=".$username." password=".$password);
+                $conn = pg_pconnect("host=".$servername." dbname=".$dbname." user=".$db_username." password=".$db_password);
                 if (!$conn) {
+			error_log("host=".$servername." dbname=".$dbname." user=".$db_username." password=".$db_password);
+
                         die("Database connection failed. ");
                 }
                 return $conn;

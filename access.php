@@ -16,7 +16,7 @@ if (empty($username)) {
 
 $password = array_key_exists("password",$_POST) ?  $_POST["password"] : "";
 
-$pass_hash = substr(crypt($password, '$2y$09$xfr1kroEG5R0gdfGd5dfg4$'), 29);
+$pass_hash = substr(crypt($password, '$2y$09$'.$pw_salt.'$'), 29);
 
 $sql = "SELECT username, firstname, password, level, country FROM access WHERE username   = '".$username."' "; //AND password = '".$password."' ";
 

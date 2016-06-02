@@ -183,7 +183,7 @@ var keys = JSON.parse(' { "taskid" : "?", "year" : "?", "quarter" : "?" } ');   
         <tr>
           <td  style="text-align: right;"></td>
              <input type="button" id="cancel" value="< Back"/>
-	     <span id="submit_message"></span>
+	     <span id="submit_message"><?php echo $pw_salt ?></span>
           </td>
         </tr>
       </tbody>

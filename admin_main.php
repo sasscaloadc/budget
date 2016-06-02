@@ -460,6 +460,10 @@ $(document).ready(function(){
 			window.location.href = location_url+"edit_task_numbers.php";
 				}); 
 
+	$("#pi_view").click(function() { 
+			window.location.href = location_url+"pi_main.php";
+				}); 
+
 	$("#reports").click(function() { 
 			window.location.href = location_url+"reports.php";
 				}); 
@@ -549,6 +553,7 @@ Tool</span></p>
                 <input type="button" id="adduser" value="Add User"/>
                 <input type="button" id="addtask" value="Add Task"/>
                 <input type="button" id="edittask" value="Edit Task"/>
+                <input type="button" id="pi_view" value="PI View"/>
                 <input type="button" id="reports" value="Reports"/>
                 <input type="button" id="logout" value="Log Out"/>
 	    </td>
