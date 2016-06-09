@@ -45,6 +45,11 @@
 
 	$conn = getConnection();
 
+	$update_c = str_replace("\"", "", $update);
+	$details_c = str_replace("\"", "", $details);
+	$update = str_replace("'", "", $update_c);
+	$details = str_replace("'", "", $details_c);
+
 	$sql = "INSERT INTO error_log (t_stamp, username, update_message, details) VALUES ('".date('Y-m-d H:i:s')."', '".$username."', '".$update."', '".$details."')";
 	
 	pg_query($conn, $sql);
