@@ -26,10 +26,10 @@ require_once("db.php");
                     " THEN 1 ELSE (prev_unused + received) / ((prev_unused / prev_xrate) + (received / xrate)) END) AS cum_personnel_euro, ".
                     "                 SUM(transport_actual / CASE WHEN (prev_unused = 0 AND received = 0) ".
                     " THEN 1 ELSE (prev_unused + received) / ((prev_unused / prev_xrate) + (received / xrate)) END) AS cum_transport_euro, ".
-                    "                 SUM(admin / xrate) AS cum_admin_euro ".
+                    "                 SUM(admin / CASE WHEN (prev_unused = 0 AND received = 0) ".
+                    " THEN 1 ELSE (prev_unused + received) / ((prev_unused / prev_xrate) + (received / xrate)) END) AS cum_admin_euro ".
                     "                     FROM budget ".
-                    "                     WHERE status = 3 ".
-                    "                        AND task_id = ".$taskid.
+                    "                     WHERE task_id = ".$taskid.
                     "                     GROUP BY task_id ";
 	
 
